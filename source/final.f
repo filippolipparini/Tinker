@@ -85,6 +85,7 @@ c
       use polpcg
       use poltcg
       use potfit
+      use qmmm
       use qmstuf
       use refer
       use repel
@@ -932,6 +933,16 @@ c
 c     deallocation of global arrays from module warp
 c
       if (allocated(m2))  deallocate (m2)
+c
+c     deallocatetion of global arrays for qm/mm
+c
+      if (allocated(ian)) deallocate(ian)
+      if (allocated(iattyp)) deallocate(iattyp)
+      if (allocated(ibfatm)) deallocate(ibfatm)
+      if (allocated(ibftyp)) deallocate(ibftyp)
+      if (allocated(atmchg)) deallocate(atmchg)
+      if (allocated(cgau)) deallocate(cgau)
+      if (allocated(atmwgt)) deallocate(atmwgt)
 c
 c     may need a pause to avoid closing the execution window
 c

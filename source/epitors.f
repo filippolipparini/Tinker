@@ -60,7 +60,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(npitors,ipit,
 !$OMP& use,x,y,z,kpit,ptorunit,use_group,use_polymer)
-!$OMP& shared(ept)
+!$OMP& shared(ept,qmatoms)
 !$OMP DO reduction(+:ept) schedule(guided)
 c
 c     calculate the pi-system torsion angle energy term
@@ -72,6 +72,11 @@ c
          id = ipit(4,i)
          ie = ipit(5,i)
          ig = ipit(6,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id).or.qmatoms(ie).or.qmatoms(ig)) cycle
 c
 c     decide whether to compute the current interaction
 c

@@ -86,7 +86,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nangtor,iat,itors,kant,anat,
 !$OMP& tors1,tors2,tors3,use,x,y,z,atorunit,use_group,use_polymer)
-!$OMP& shared(eat,deat,vir)
+!$OMP& shared(eat,deat,vir,qmatoms)
 !$OMP DO reduction(+:eat,deat,vir) schedule(guided)
 c
 c     calculate the angle-torsion energy and first derviatives
@@ -97,6 +97,11 @@ c
          ib = itors(2,i)
          ic = itors(3,i)
          id = itors(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c

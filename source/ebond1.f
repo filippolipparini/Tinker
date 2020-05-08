@@ -52,7 +52,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nbond,ibnd,bl,bk,use,
 !$OMP& x,y,z,cbnd,qbnd,bndtyp,bndunit,use_group,use_polymer)
-!$OMP& shared(eb,deb,vir)
+!$OMP& shared(eb,deb,vir,qmatoms)
 !$OMP DO reduction(+:eb,deb,vir) schedule(guided)
 c
 c     calculate the bond stretch energy and first derivatives
@@ -60,6 +60,10 @@ c
       do i = 1, nbond
          ia = ibnd(1,i)
          ib = ibnd(2,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib)) cycle
          ideal = bl(i)
          force = bk(i)
 c

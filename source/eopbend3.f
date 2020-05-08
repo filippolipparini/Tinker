@@ -79,7 +79,7 @@ c
 !$OMP PARALLEL default(private) shared(nopbend,iopb,iang,opbk,use,
 !$OMP& x,y,z,opbtyp,copb,qopb,popb,sopb,opbunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(eopb,neopb,aeopb)
+!$OMP& shared(eopb,neopb,aeopb,qmatoms)
 !$OMP DO reduction(+:eopb,neopb,aeopb) schedule(guided)
 c
 c     calculate the out-of-plane bending energy term
@@ -90,6 +90,11 @@ c
          ib = iang(2,i)
          ic = iang(3,i)
          id = iang(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
          force = opbk(iopbend)
 c
 c     decide whether to compute the current interaction

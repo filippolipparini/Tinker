@@ -64,7 +64,7 @@ c
 !$OMP PARALLEL default(private) shared(nbond,ibnd,bl,bk,use,
 !$OMP& x,y,z,cbnd,qbnd,bndtyp,bndunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(eb,neb,aeb)
+!$OMP& shared(eb,neb,aeb,qmatoms)
 !$OMP DO reduction(+:eb,neb,aeb) schedule(guided)
 c
 c     calculate the bond stretching energy term
@@ -72,6 +72,10 @@ c
       do i = 1, nbond
          ia = ibnd(1,i)
          ib = ibnd(2,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib)) cycle
          ideal = bl(i)
          force = bk(i)
 c

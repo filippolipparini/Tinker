@@ -41,6 +41,7 @@ c     es     solvation potential energy of the system
 c     elf    metal ligand field potential energy of the system
 c     eg     geometric restraint potential energy of the system
 c     ex     extra term potential energy of the system
+c     eqmmm  qmmm potential energy of the system
 c
 c
       module energi
@@ -54,6 +55,6 @@ c
       real*8 ec,ecd,ed
       real*8 em,ep,ect
       real*8 erxf,es,elf
-      real*8 eg,ex
+      real*8 eg,ex,eqmmm
       save
       end

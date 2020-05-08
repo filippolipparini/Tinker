@@ -81,7 +81,7 @@ c
 !$OMP PARALLEL default(private) shared(nitors,iitors,use,x,y,z,
 !$OMP& itors1,itors2,itors3,itorunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(eit,neit,aeit)
+!$OMP& shared(eit,neit,aeit,qmatoms)
 !$OMP DO reduction(+:eit,neit,aeit) schedule(guided)
 c
 c     calculate the improper torsional angle energy term
@@ -91,6 +91,11 @@ c
          ib = iitors(2,i)
          ic = iitors(3,i)
          id = iitors(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c

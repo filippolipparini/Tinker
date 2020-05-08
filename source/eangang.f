@@ -53,7 +53,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nangang,iaa,iang,
 !$OMP& use,x,y,z,anat,kaa,aaunit,use_group,use_polymer)
-!$OMP& shared(eaa)
+!$OMP& shared(eaa,qmatoms)
 !$OMP DO reduction(+:eaa) schedule(guided)
 c
 c     calculate the angle-angle interaction energy term
@@ -66,6 +66,11 @@ c
          ic = iang(3,i)
          id = iang(1,k)
          ie = iang(3,k)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id).or.qmatoms(ie)) cycle
 c
 c     decide whether to compute the current interaction
 c

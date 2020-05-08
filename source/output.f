@@ -20,6 +20,7 @@ c     velsave     logical flag to save velocity vector components
 c     frcsave     logical flag to save force vector components
 c     uindsave    logical flag to save induced atomic dipoles
 c     coordtype   selects Cartesian, internal, rigid body or none
+c     netcdfsave  logical flag to save the trajectory in netcdf format
 c
 c
       module output
@@ -31,6 +32,7 @@ c
       logical velsave
       logical frcsave
       logical uindsave
+      logical netcdfsave
       character*9 coordtype
       save
       end

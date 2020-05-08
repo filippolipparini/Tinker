@@ -63,7 +63,7 @@ c
 !$OMP PARALLEL default(private) shared(nurey,iury,ul,uk,
 !$OMP& use,x,y,z,cury,qury,ureyunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(eub,neub,aeub)
+!$OMP& shared(eub,neub,aeub,qmatoms)
 !$OMP DO reduction(+:eub,neub,aeub) schedule(guided)
 c
 c     calculate the Urey-Bradley 1-3 energy term
@@ -72,6 +72,10 @@ c
          ia = iury(1,i)
          ib = iury(2,i)
          ic = iury(3,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic)) cycle
          ideal = ul(i)
          force = uk(i)
 c

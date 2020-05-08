@@ -36,7 +36,7 @@ c
       real*8 eopd0,eid0,eit0,et0,ept0,ebt0
       real*8 eat0,ett0,ev0,er0,edsp0,ec0
       real*8 ecd0,ed0,em0,ep0,ect0,erxf0
-      real*8 es0,elf0,eg0,ex0
+      real*8 es0,elf0,eg0,ex0,eqmmm0
       real*8 totnorm,ntotnorm,rms,nrms
       real*8, allocatable :: denorm(:)
       real*8, allocatable :: ndenorm(:)
@@ -70,6 +70,7 @@ c
       real*8, allocatable :: ndelf(:,:)
       real*8, allocatable :: ndeg(:,:)
       real*8, allocatable :: ndex(:,:)
+      real*8, allocatable :: ndeqmmm(:,:)
       logical exist,query
       logical doanalyt,donumer,dofull
       character*1 answer
@@ -202,6 +203,7 @@ c
          allocate (ndelf(3,n))
          allocate (ndeg(3,n))
          allocate (ndex(3,n))
+         allocate (ndeqmmm(3,n))
       end if
 c
 c     perform analysis for each successive coordinate structure
@@ -251,12 +253,13 @@ c
      &                 /,15x,'EAT',13x,'ETT',13x,'EV',14x,'ER',
      &                 /,15x,'EDSP',12x,'EC',14x,'ECD',13x,'ED',
      &                 /,15x,'EM',14x,'EP',14x,'ECT',13x,'ERXF',
-     &                 /,15x,'ES',14x,'ELF',13x,'EG',14x,'EX')
+     &                 /,15x,'ES',14x,'ELF',13x,'EG',14x,'EX',
+     &                 /,15x,'EQMMM')
                write (iout,160)  eb,ea,eba,eub,eaa,eopb,eopd,eid,eit,et,
      &                           ept,ebt,eat,ett,ev,er,edsp,ec,ecd,ed,
-     &                           em,ep,ect,erxf,es,elf,eg,ex
+     &                           em,ep,ect,erxf,es,elf,eg,ex,eqmmm
   160          format (/,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8,
-     &                 /,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8)
+     &                 /,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8,/,6x,f16.8)
             else if (digits .ge. 6) then
                write (iout,170)
   170          format (/,'  Energy',6x,'EB',12x,'EA',12x,'EBA',
@@ -269,12 +272,12 @@ c
      &                    11x,'ED',
      &                 /,14x,'EM',12x,'EP',12x,'ECT',11x,'ERXF',
      &                    10x,'ES',
-     &                 /,14x,'ELF',11x,'EG',12x,'EX')
+     &                 /,14x,'ELF',11x,'EG',12x,'EX',11x,'EQMMM')
                write (iout,180)  eb,ea,eba,eub,eaa,eopb,eopd,eid,eit,et,
      &                           ept,ebt,eat,ett,ev,er,edsp,ec,ecd,ed,
-     &                           em,ep,ect,erxf,es,elf,eg,ex
+     &                           em,ep,ect,erxf,es,elf,eg,ex,eqmmm
   180          format (/,6x,5f14.6,/,6x,5f14.6,/,6x,5f14.6,/,6x,5f14.6,
-     &                 /,6x,5f14.6,/,6x,3f14.6)
+     &                 /,6x,5f14.6,/,6x,4f14.6)
             else
                write (iout,190)
   190          format (/,'  Energy',6x,'EB',10x,'EA',10x,'EBA',
@@ -285,12 +288,13 @@ c
      &                    10x,'EDSP',8x,'EC',
      &                 /,14x,'ECD',9x,'ED',10x,'EM',10x,'EP',
      &                    10x,'ECT',9x,'ERXF',
-     &                 /,14x,'ES',10x,'ELF',9x,'EG',10x,'EX')
+     &                 /,14x,'ES',10x,'ELF',9x,'EG',10x,'EX',
+     &                    10x,'EQMMM')
                write (iout,200)  eb,ea,eba,eub,eaa,eopb,eopd,eid,eit,et,
      &                           ept,ebt,eat,ett,ev,er,edsp,ec,ecd,ed,
-     &                           em,ep,ect,erxf,es,elf,eg,ex
+     &                           em,ep,ect,erxf,es,elf,eg,ex,eqmmm
   200          format (/,6x,6f12.4,/,6x,6f12.4,/,6x,6f12.4,/,6x,6f12.4,
-     &                    /,6x,4f12.4)
+     &                    /,6x,5f12.4)
             end if
          end if
 c
@@ -311,7 +315,8 @@ c
      &              /,15x,'d EAT',11x,'d ETT',11x,'d EV',12x,'d ER',
      &              /,15x,'d EDSP',10x,'d EC',12x,'d ECD',11x,'d ED',
      &              /,15x,'d EM',12x,'d EP',12x,'d ECT',11x,'d ERXF',
-     &              /,15x,'d ES',12x,'d ELF',11x,'d EG',12x,'d EX')
+     &              /,15x,'d ES',12x,'d ELF',11x,'d EG',12x,'d EX',
+     &              /,15x,'d EQMMM')
             else if (digits .ge. 6) then
                write (iout,230)
   230          format (/,2x,'Atom',8x,'d EB',10x,'d EA',10x,'d EBA',
@@ -324,7 +329,7 @@ c
      &                 9x,'d ED',
      &              /,14x,'d EM',10x,'d EP',10x,'d ECT',9x,'d ERXF',
      &                 8x,'d ES',
-     &              /,14x,'d ELF',9x,'d EG',10x,'d EX')
+     &              /,14x,'d ELF',9x,'d EG',10x,'d EX',10x,'d EQMMM')
             else
                write (iout,240)
   240          format (/,2x,'Atom',6x,'d EB',8x,'d EA',8x,'d EBA',
@@ -335,7 +340,8 @@ c
      &                 8x,'d ER',8x,'d EDSP',6x,'d EC',
      &              /,12x,'d ECD',7x,'d ED',8x,'d EM',8x,'d EP',
      &                 8x,'d ECT',7x,'d ERXF',
-     &              /,12x,'d ES',8x,'d ELF',7x,'d EG',8x,'d EX')
+     &              /,12x,'d ES',8x,'d ELF',7x,'d EG',8x,'d EX',
+     &                 8x,'d EQMMM')
             end if
          end if
 c
@@ -427,6 +433,7 @@ c
                   ndelf(j,i) = (elf - elf0) / eps
                   ndeg(j,i) = (eg - eg0) / eps
                   ndex(j,i) = (ex - ex0) / eps
+                  ndeqmmm(j,i) = (eqmmm - eqmmm0) / eps
                end do
             end if
 c
@@ -446,10 +453,11 @@ c
      &                                    ded(j,i),dem(j,i),dep(j,i),
      &                                    dect(j,i),derxf(j,i),
      &                                    des(j,i),delf(j,i),deg(j,i),
-     &                                    dex(j,i)
+     &                                    dex(j,i),deqmmm(j,i)
   250                   format (/,i6,4f16.8,/,5x,a1,4f16.8,
      &                          /,' Anlyt',4f16.8,/,6x,4f16.8,
-     &                          /,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8)
+     &                          /,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8,
+     &                          /,6x,f16.8)
                      else if (digits .ge. 6) then
                         write (iout,260)  i,deb(j,i),dea(j,i),deba(j,i),
      &                                    deub(j,i),deaa(j,i),axis(j),
@@ -461,10 +469,10 @@ c
      &                                    ded(j,i),dem(j,i),dep(j,i),
      &                                    dect(j,i),derxf(j,i),
      &                                    des(j,i),delf(j,i),deg(j,i),
-     &                                    dex(j,i)
+     &                                    dex(j,i),deqmmm(j,i)
   260                   format (/,i6,5f14.6,/,5x,a1,5f14.6,
      &                          /,' Anlyt',5f14.6,/,6x,5f14.6,
-     &                          /,6x,5f14.6,/,6x,3f14.6)
+     &                          /,6x,5f14.6,/,6x,4f14.6)
                      else
                         write (iout,270)  i,deb(j,i),dea(j,i),deba(j,i),
      &                                    deub(j,i),deaa(j,i),
@@ -476,10 +484,10 @@ c
      &                                    ded(j,i),dem(j,i),dep(j,i),
      &                                    dect(j,i),derxf(j,i),
      &                                    des(j,i),delf(j,i),deg(j,i),
-     &                                    dex(j,i)
+     &                                    dex(j,i),deqmmm(j,i)
   270                   format (/,i6,6f12.4,/,5x,a1,6f12.4,
      &                          /,' Anlyt',6f12.4,/,6x,6f12.4,
-     &                          /,6x,4f12.4)
+     &                          /,6x,5f12.4)
                      end if
                   end if
 c
@@ -501,10 +509,11 @@ c
      &                                    ndep(j,i),ndect(j,i),
      &                                    nderxf(j,i),ndes(j,i),
      &                                    ndelf(j,i),ndeg(j,i),
-     &                                    ndex(j,i)
+     &                                    ndex(j,i),ndeqmmm(j,i)
   280                   format (/,i6,4f16.8,/,5x,a1,4f16.8,
      &                          /,' Numer',4f16.8,/,6x,4f16.8,
-     &                          /,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8)
+     &                          /,6x,4f16.8,/,6x,4f16.8,/,6x,4f16.8,
+     &                          /,6x,f16.8)
                      else if (digits .ge. 6) then
                         write (iout,290)  i,ndeb(j,i),ndea(j,i),
      &                                    ndeba(j,i),ndeub(j,i),
@@ -520,10 +529,10 @@ c
      &                                    ndep(j,i),ndect(j,i),
      &                                    nderxf(j,i),ndes(j,i),
      &                                    ndelf(j,i),ndeg(j,i),
-     &                                    ndex(j,i)
+     &                                    ndex(j,i),ndeqmmm(j,i)
   290                   format (/,i6,5f14.6,/,5x,a1,5f14.6,
      &                          /,' Numer',5f14.6,/,6x,5f14.6,
-     &                          /,6x,5f14.6,/,6x,3f14.6)
+     &                          /,6x,5f14.6,/,6x,4f14.6)
                      else
                         write (iout,300)  i,ndeb(j,i),ndea(j,i),
      &                                    ndeba(j,i),ndeub(j,i),
@@ -539,15 +548,17 @@ c
      &                                    ndep(j,i),ndect(j,i),
      &                                    nderxf(j,i),ndes(j,i),
      &                                    ndelf(j,i),ndeg(j,i),
-     &                                    ndex(j,i)
+     &                                    ndex(j,i),ndeqmmm(j,i)
   300                   format (/,i6,6f12.4,/,5x,a1,6f12.4,
      &                          /,' Numer',6f12.4,/,6x,6f12.4,
-     &                          /,6x,4f12.4)
+     &                          /,6x,5f12.4)
                      end if
                   end if
                end do
             end if
          end do
+c
+c        call gaussian_input
 c
 c     print the total gradient components for each atom
 c
@@ -722,9 +733,121 @@ c
          deallocate (ndelf)
          deallocate (ndeg)
          deallocate (ndex)
+         deallocate (ndeqmmm)
       end if
 c
 c     perform any final tasks before program exit
 c
       call final
+      end
+c
+c     silly routine to write a quick-and-dirty gaussian input
+c
+      subroutine gaussian_input
+      use sizes
+      use atomid
+      use atoms
+      use couple
+      use mpole
+      use polar
+      use polgrp
+      use polpot
+      use units
+      implicit real*8 (a-h,o-z)
+C
+      open (file='gauinp.inp',unit=10,form='formatted',
+     $  access='sequential')
+C
+C     atomic numbers:
+C
+      do i = 1, n
+        write(10,'(i3)') atomic(i)
+      end do
+C
+C     coordinates:
+C
+      do i = 1, n
+        write(10,'(3f12.6)') x(i), y(i), z(i)
+      end do
+C
+C     fragment (unused)
+C
+      do i = 1, n
+        write(10,'(i2)') 1
+      end do
+C
+C     multipoles
+C
+      do i = 1, n
+         do k = 2, 4
+            pole(k,i) = pole(k,i) / bohr
+         end do
+         do k = 5, 13
+            pole(k,i) = 3.0d0*pole(k,i) / bohr**2 
+         end do
+      end do
+!
+      do i = 1, n
+        ii = pollist(i)
+        if (ii.eq.0) then
+          write(10,'(10f12.6)') 0.0d0, 0.0d0, 0.0d0, 0.0d0, 0.0d0,
+     $      0.0d0, 0.0d0, 0.0d0, 0.0d0, 0.0d0
+        else
+          write(10,'(10f12.6)') pole(1:6,ii), pole(9,ii), pole(7,ii),
+     $      pole(10,ii), pole(13,ii)
+        end if
+      end do
+c
+c     polarizability:
+c
+      do i = 1, n
+        ii = pollist(i)
+        if (ii.eq.0) then
+          write(10,'(f12.6)') 0.0d0
+        else
+          write(10,'(f12.6)') polarity(ii)
+        end if
+      end do
+c
+c     1-2 connectivity
+c
+      do i = 1, n
+        write(10,'(10i8)') i12(1:8,i)
+      end do
+c
+c     1-1 group connectivity
+c
+      do i = 1, n
+        do k = np11(i) + 1, 120
+          ip11(k,i) = 0
+        end do
+        write(10,'(120i8)') ip11(:,i)
+      end do
+c
+c     information for rotating the multipoles:
+c
+      do i = 1, n
+        ii = pollist(i)
+        if (ii.eq.0) then
+          write(10,'(4i8)') 0, 0, 0, 0
+        else
+          if (polaxe(ii) .eq. 'Z-Only') then
+            write(10,'(4i8)') 3, zaxis(ii), xaxis(ii), yaxis(ii)
+          else if (polaxe(ii) .eq. 'Z-then-X') then
+            write(10,'(4i8)') 1, zaxis(ii), xaxis(ii), yaxis(ii)
+          else if (polaxe(ii) .eq. 'Bisector') then
+            write(10,'(4i8)') 2, zaxis(ii), xaxis(ii), yaxis(ii)
+          else if (polaxe(ii) .eq. 'Z-Bisect') then
+            write(10,'(4i8)') 4, zaxis(ii), xaxis(ii), yaxis(ii)
+          else if (polaxe(ii) .eq. '3-Fold3-Fold3-Fold') then
+            write(10,'(4i8)') 5, zaxis(ii), xaxis(ii), yaxis(ii)
+          else
+            write(10,'(4i8)') 0, 0, 0, 0
+          end if
+        end if
+      end do
+c
+c     done!
+c
+      return
       end

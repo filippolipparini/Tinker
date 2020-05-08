@@ -24,6 +24,7 @@ c
       use dsppot
       use fields
       use mplpot
+      use output
       use polpot
       use potent
       use reppot
@@ -190,6 +191,22 @@ c
          if (value .eq. 'ONLY')  call potoff
          use_extra = .true.
          if (value .eq. 'NONE')  use_extra = .false.
+      else if (keyword(1:5) .eq. 'QMMM ') then
+         call getword (record,value,next)
+         use_qmmm = .true.
+         if (value .eq. 'NONE')  use_qmmm = .false.
+      else if (keyword(1:9) .eq. 'NETCDFIO ') then
+         write(6,*) 'here!'
+#ifdef USE_NETCDF
+         call getword (record,value,next)
+         netcdfsave = .true.
+         write(6,*) 'using netcdf for i/o'
+         if (value .eq. 'NONE')  netcdfsave = .false.
+#else
+         write(6,900)
+         netcdfsave = .false.
+  900    format(' warning: no netcdf support. using traditional i/o')
+#endif
       end if
 c
 c     select the name of the force field parameter set
@@ -537,5 +554,6 @@ c
       use_metal = .false.
       use_geom = .false.
       use_extra = .false.
+      use_qmmm = .false.
       return
       end

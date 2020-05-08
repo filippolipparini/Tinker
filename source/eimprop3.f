@@ -76,7 +76,7 @@ c
 !$OMP PARALLEL default(private) shared(niprop,iiprop,use,
 !$OMP& x,y,z,kprop,vprop,idihunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(eid,neid,aeid)
+!$OMP& shared(eid,neid,aeid,qmatoms)
 !$OMP DO reduction(+:eid,neid,aeid) schedule(guided)
 c
 c     calculate the improper dihedral angle energy term
@@ -86,6 +86,11 @@ c
          ib = iiprop(2,i)
          ic = iiprop(3,i)
          id = iiprop(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c

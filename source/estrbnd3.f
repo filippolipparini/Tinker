@@ -76,7 +76,7 @@ c
 !$OMP PARALLEL default(private) shared(nstrbnd,isb,iang,sbk,
 !$OMP& anat,bl,bk,use,x,y,z,stbnunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(eba,neba,aeba)
+!$OMP& shared(eba,neba,aeba,qmatoms)
 !$OMP DO reduction(+:eba,neba,aeba) schedule(guided)
 c
 c     calculate the stretch-bend interaction energy term
@@ -86,6 +86,10 @@ c
          ia = iang(1,i)
          ib = iang(2,i)
          ic = iang(3,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic)) cycle
          force1 = sbk(1,istrbnd)
          force2 = sbk(2,istrbnd)
 c

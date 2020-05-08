@@ -23,7 +23,7 @@ c
       use keys
       use usage
       implicit none
-      integer i,j,next
+      integer i,j,kk,next
       integer nmobile,nfixed
       integer center,nsphere
       integer, allocatable :: mobile(:)
@@ -41,6 +41,14 @@ c
       if (allocated(use))  deallocate (use)
       allocate (iuse(n))
       allocate (use(0:n))
+      if (allocated(qmatoms))  deallocate (qmatoms)
+      allocate (qmatoms(n))
+      if (allocated(qmlist))  deallocate (qmlist)
+      allocate (qmlist(n))
+      if (allocated(pbond))  deallocate (pbond)
+      allocate (pbond(n))
+      if (allocated(use_pbond))  deallocate (use_pbond)
+      allocate (use_pbond(n))
 c
 c     perform dynamic allocation of some local arrays
 c
@@ -56,11 +64,22 @@ c
       end do
       nmobile = 0
       nfixed = 0
+      nqmatoms = 0
+      npbond = 0
       do i = 1, n
+         pbond(i) = 0
          mobile(i) = 0
          fixed(i) = 0
+         qmlist(i) = 0
       end do
       nsphere = 0
+c
+c     set defaults for the number of active qm atoms
+c
+      do i = 1, n
+         qmatoms(i) = .false.
+         use_pbond(i) = .false.
+      end do
 c
 c     get any keywords containing active atom parameters
 c
@@ -90,6 +109,25 @@ c
                nfixed = nfixed + 1
                fixed(nfixed) = max(-n,min(n,fixed(nfixed)))
             end do
+c
+c     get any lists of atoms that belong to the qm part of a qm/mm
+c     computation
+c
+         else if (keyword(1:8) .eq. 'QMATOMS ') then
+            read (string,*,err=25,end=25)  (qmlist(i),i=nqmatoms+1,n)
+   25       continue
+            do while (qmlist(nqmatoms+1) .ne. 0)
+               nqmatoms = nqmatoms + 1
+            end do
+         else if (keyword(1:8) .eq. 'PBATOMS ') then                 
+            read (string,*,err=26,end=26)  (pbond(i),i=npbond+1,n)   
+  26        continue                                                 
+            do while (pbond(npbond+1) .ne. 0)                        
+               npbond = npbond + 1                                   
+               pbond(npbond) = max(-n,min(n,pbond(npbond)))          
+               kk = pbond(npbond)                                    
+               use_pbond(kk) = .true.                                
+            end do                                                   
 c
 c     get the center and radius of the sphere of active atoms
 c
@@ -199,6 +237,13 @@ c
             j = j + 1
             iuse(j) = i
          end if
+      end do
+c
+c     use logical array to set the list of qm atoms
+c
+      do i = 1, nqmatoms
+        j = qmlist(i)
+        qmatoms(j) = .true.
       end do
 c
 c     output the final list of the active atoms

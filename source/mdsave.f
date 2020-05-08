@@ -121,31 +121,41 @@ c
   160       format (' Lattice Angles',7x,3f18.10)
          end if
       end if
+      if (netcdfsave) then
+#ifdef USE_NETCDF
+        call netcdfio(istep.eq.1,istep,dt)
+#else
+        write (iout,900)
+        call fatal
+  900   format(' netcdf i/o required, but no netcdf support!')
+#endif
+      else
 c
 c     save coordinates to an archive or numbered structure file
 c
-      ixyz = freeunit ()
-      if (archive) then
-         xyzfile = filename(1:leng)
-         call suffix (xyzfile,'arc','old')
-         inquire (file=xyzfile,exist=exist)
-         if (exist) then
-            call openend (ixyz,xyzfile)
-         else
-            open (unit=ixyz,file=xyzfile,status='new')
-         end if
-      else
-         xyzfile = filename(1:leng)//'.'//ext(1:lext)
-         call version (xyzfile,'new')
-         open (unit=ixyz,file=xyzfile,status='new')
+        ixyz = freeunit ()
+        if (archive) then
+           xyzfile = filename(1:leng)
+           call suffix (xyzfile,'arc','old')
+           inquire (file=xyzfile,exist=exist)
+           if (exist) then
+              call openend (ixyz,xyzfile)
+           else
+              open (unit=ixyz,file=xyzfile,status='new')
+           end if
+        else
+           xyzfile = filename(1:leng)//'.'//ext(1:lext)
+           call version (xyzfile,'new')
+           open (unit=ixyz,file=xyzfile,status='new')
+        end if
+        if (use_bounds)  call bounds
+        call prtxyz (ixyz)
+        close (unit=ixyz)
+        write (iout,170)  isave
+  170   format (' Frame Number',13x,i10)
+        write (iout,180)  xyzfile(1:trimtext(xyzfile))
+  180   format (' Coordinate File',13x,a)
       end if
-      if (use_bounds)  call bounds
-      call prtxyz (ixyz)
-      close (unit=ixyz)
-      write (iout,170)  isave
-  170 format (' Frame Number',13x,i10)
-      write (iout,180)  xyzfile(1:trimtext(xyzfile))
-  180 format (' Coordinate File',13x,a)
 c
 c     update the information needed to restart the trajectory
 c

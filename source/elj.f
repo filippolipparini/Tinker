@@ -153,6 +153,7 @@ c     decide whether to compute the current interaction
 c
          do kk = ii+1, nvdw
             k = ivdw(kk)
+            if (qmatoms(i).and.qmatoms(k)) cycle
             kv = ired(k)
             proceed = .true.
             if (use_group)  call groups (proceed,fgrp,i,k,0,0,0,0)
@@ -257,6 +258,7 @@ c     decide whether to compute the current interaction
 c
          do kk = ii, nvdw
             k = ivdw(kk)
+            if (qmatoms(i).and.qmatoms(k)) cycle
             kv = ired(k)
             proceed = .true.
             if (use_group)  call groups (proceed,fgrp,i,k,0,0,0,0)
@@ -491,6 +493,7 @@ c
                if (kgz.lt.kbz(ii) .and. kgz.gt.kez(ii))  goto 20
             end if
             k = ivdw(kk-((kk-1)/nvdw)*nvdw)
+            if (qmatoms(i).and.qmatoms(k)) cycle
             kv = ired(k)
             prime = (kk .le. nvdw)
 c
@@ -674,7 +677,7 @@ c
 !$OMP& i12,i13,i14,i15,v2scale,v3scale,v4scale,v5scale,
 !$OMP& use_group,off2,radmin,epsilon,radmin4,epsilon4,
 !$OMP& cut2,c0,c1,c2,c3,c4,c5) firstprivate(vscale,iv14)
-!$OMP& shared(ev)
+!$OMP& shared(ev,qmatoms)
 !$OMP DO reduction(+:ev) schedule(guided)
 c
 c     find the van der Waals energy via neighbor list search
@@ -708,6 +711,7 @@ c     decide whether to compute the current interaction
 c
          do kk = 1, nvlst(ii)
             k = ivdw(vlst(kk,ii))
+            if (qmatoms(i).and.qmatoms(k)) cycle
             kv = ired(k)
             proceed = .true.
             if (use_group)  call groups (proceed,fgrp,i,k,0,0,0,0)
@@ -927,6 +931,7 @@ c     decide whether to compute the current interaction
 c
          do kk = ii+1, nvdw
             k = ivdw(kk)
+            if (qmatoms(i).and.qmatoms(k)) cycle
             kv = ired(k)
             proceed = .true.
             if (use_group)  call groups (proceed,fgrp,i,k,0,0,0,0)

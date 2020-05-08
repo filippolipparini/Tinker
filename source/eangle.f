@@ -61,7 +61,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nangle,iang,anat,ak,afld,use,
 !$OMP& x,y,z,cang,qang,pang,sang,angtyp,angunit,use_group,use_polymer)
-!$OMP& shared(ea)
+!$OMP& shared(ea,qmatoms)
 !$OMP DO reduction(+:ea) schedule(guided)
 c
 c     calculate the bond angle bending energy term
@@ -71,6 +71,11 @@ c
          ib = iang(2,i)
          ic = iang(3,i)
          id = iang(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
          ideal = anat(i)
          force = ak(i)
 c

@@ -73,7 +73,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nstrbnd,isb,iang,sbk,
 !$OMP& anat,bl,bk,use,x,y,z,stbnunit,use_group,use_polymer)
-!$OMP& shared(eba,deba,vir)
+!$OMP& shared(eba,deba,vir,qmatoms)
 !$OMP DO reduction(+:eba,deba,vir) schedule(guided)
 c
 c     calculate the stretch-bend energy and first derivatives
@@ -88,6 +88,32 @@ c
 c
 c     decide whether to compute the current interaction
 c
+cfl check this
+         if (qmatoms(ia) .and. qmatoms(ib) .and.                      
+     $          qmatoms(ic)) cycle                                    
+                                                                      
+         if (use_pbond(ia) .or. use_pbond(ib) .or.                    
+     $       use_pbond(ic)) then                                      
+            if (use_pbond(ia) .and.                                   
+     $          qmatoms(ib) .and. qmatoms(ic)) then                   
+c                print*, '>>>> In strech-bnd <<<<'                    
+c                print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
+c                print*,ia,ib,ic                                      
+                cycle                                                 
+            elseif (use_pbond(ib) .and.                               
+     $          qmatoms(ic) .and. qmatoms(ia)) then                   
+c                print*, '>>>> In strech-bnd <<<<'                    
+c                print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
+c                print*,ia,ib,ic                                      
+                cycle                                                 
+            elseif (use_pbond(ic) .and.                               
+     $          qmatoms(ia) .and. qmatoms(ib)) then                   
+c                print*, '>>>> In strech-bnd <<<<'                    
+c                print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
+c                print*,ia,ib,ic                                      
+                cycle                                                 
+            end if                                                    
+         end if                                                       
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,0,0,0)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or. use(ic))

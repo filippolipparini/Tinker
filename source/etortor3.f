@@ -87,7 +87,7 @@ c
 !$OMP PARALLEL default(private) shared(ntortor,itt,ibitor,
 !$OMP& use,x,y,z,tnx,ttx,tny,tty,tbf,tbx,tby,tbxy,ttorunit,
 !$OMP& use_group,use_polymer,verbose,debug,header,iout)
-!$OMP& shared(ett,nett,aett)
+!$OMP& shared(ett,nett,aett,qmatoms)
 !$OMP DO reduction(+:ett,nett,aett) schedule(guided)
 c
 c     calculate the torsion-torsion interaction energy term
@@ -108,6 +108,11 @@ c
             id = ibitor(2,i)
             ie = ibitor(1,i)
          end if
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id).or.qmatoms(ie)) cycle
 c
 c     decide whether to compute the current interaction
 c

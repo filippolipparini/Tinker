@@ -41,7 +41,7 @@ c     aes     solvation energy partitioned over atoms
 c     aelf    metal ligand field energy partitioned over atoms
 c     aeg     geometric restraint energy partitioned over atoms
 c     aex     extra energy term partitioned over atoms
-c
+c     aeqmmm  qmmm energy partitioned over atoms (dummy)
 c
       module analyz
       implicit none
@@ -74,5 +74,6 @@ c
       real*8, allocatable :: aelf(:)
       real*8, allocatable :: aeg(:)
       real*8, allocatable :: aex(:)
+      real*8, allocatable :: aeqmmm(:)
       save
       end

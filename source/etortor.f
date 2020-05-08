@@ -65,7 +65,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(ntortor,itt,ibitor,
 !$OMP& use,x,y,z,tnx,ttx,tny,tty,tbf,tbx,tby,tbxy,ttorunit,
-!$OMP& use_group,use_polymer)
+!$OMP& use_group,use_polymer,qmatoms)
 !$OMP& shared(ett)
 !$OMP DO reduction(+:ett) schedule(guided)
 c
@@ -87,6 +87,11 @@ c
             id = ibitor(2,i)
             ie = ibitor(1,i)
          end if
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id).or.qmatoms(ie)) cycle
 c
 c     decide whether to compute the current interaction
 c

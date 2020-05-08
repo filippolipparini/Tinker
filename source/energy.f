@@ -18,6 +18,7 @@ c
 c
       function energy ()
       use energi
+      use bound
       use iounit
       use limits
       use potent
@@ -58,6 +59,11 @@ c
       elf = 0.0d0
       eg = 0.0d0
       ex = 0.0d0
+      eqmmm = 0.0d0
+c
+c     maintain any periodic boundary conditions
+c
+      if (use_bounds .and. .not.use_rigid)  call bounds
 c
 c     update the pairwise interaction neighbor lists
 c
@@ -122,12 +128,16 @@ c
       if (use_metal)  call emetal
       if (use_extra)  call extra
 c
+c     call qm/mm energy with gaussian routine
+c
+c     if (use_qmmm) call eqmmm0
+c
 c     sum up to give the total potential energy
 c
       esum = eb + ea + eba + eub + eaa + eopb + eopd + eid + eit
      &          + et + ept + ebt + eat + ett + ev + er + edsp
      &          + ec + ecd + ed + em + ep + ect + erxf + es + elf
-     &          + eg + ex
+     &          + eg + ex + eqmmm
       energy = esum
 c
 c     check for an illegal value for the total energy

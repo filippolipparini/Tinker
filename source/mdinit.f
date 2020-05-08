@@ -34,6 +34,7 @@ c
       use moldyn
       use mpole
       use output
+      use potent
       use rgddyn
       use rigid
       use stodyn
@@ -393,6 +394,7 @@ c
          open (unit=idyn,file=dynfile,status='old')
          rewind (unit=idyn)
          call readdyn (idyn)
+         if (use_qmmm) call energy
          close (unit=idyn)
 c
 c     set translational velocities for rigid body dynamics

@@ -8,7 +8,7 @@ doc/hippo
 doc/mechanic
 doc/multipoles
 doc/word
-#fftw
+fftw
 lib/linux/lib*
 lib/macos/lib*
 lib/windows/lib*

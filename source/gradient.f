@@ -64,6 +64,7 @@ c
       elf = 0.0d0
       eg = 0.0d0
       ex = 0.0d0
+      eqmmm = 0.0d0
 c
 c     perform dynamic allocation of some global arrays
 c
@@ -98,6 +99,7 @@ c
             deallocate (delf)
             deallocate (deg)
             deallocate (dex)
+            deallocate (deqmmm)
          end if
       end if
       if (.not. allocated(desum)) then
@@ -130,6 +132,7 @@ c
          allocate (delf(3,n))
          allocate (deg(3,n))
          allocate (dex(3,n))
+         allocate (deqmmm(3,n))
       end if
 c
 c     zero out each of the first derivative components
@@ -164,6 +167,7 @@ c
             delf(j,i) = 0.0d0
             deg(j,i) = 0.0d0
             dex(j,i) = 0.0d0
+            deqmmm(j,i) = 0.0d0
          end do
       end do
 c
@@ -239,12 +243,16 @@ c
       if (use_geom)  call egeom1
       if (use_extra)  call extra1
 c
+c     call qm/mm gradient with gaussian routine
+c
+c     if (use_qmmm) call eqmmm1
+c
 c     sum up to get the total energy and first derivatives
 c
       esum = eb + ea + eba + eub + eaa + eopb + eopd + eid + eit
      &          + et + ept + ebt + eat + ett + ev + er + edsp
      &          + ec+ ecd + ed + em + ep + ect + erxf + es + elf
-     &          + eg + ex
+     &          + eg + ex + eqmmm
       energy = esum
       do i = 1, n
          do j = 1, 3
@@ -257,7 +265,7 @@ c
      &                      + decd(j,i) + ded(j,i) + dem(j,i)
      &                      + dep(j,i) + dect(j,i) + derxf(j,i)
      &                      + des(j,i) + delf(j,i)
-     &                      + deg(j,i) + dex(j,i)
+     &                      + deg(j,i) + dex(j,i) + deqmmm(j,i)
             derivs(j,i) = desum(j,i)
          end do
       end do

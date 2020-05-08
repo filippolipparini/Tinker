@@ -720,6 +720,10 @@ c
          fstr = '('' Extra Energy Terms'',9x,'//form1//')'
          write (iout,fstr)  ex,nex
       end if
+      if (use_qmmm .and. (neqmmm.ne.0.or.eqmmm.ne.0.0d0)) then
+         fstr = '('' QM/MM Energy Terms'',9x,'//form1//')'
+         write (iout,fstr)  eqmmm,neqmmm
+      end if
       return
       end
 c

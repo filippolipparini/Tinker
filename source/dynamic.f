@@ -33,12 +33,19 @@ c
       implicit none
       integer i,istep,nstep
       integer mode,next
-      real*8 dt,dtsave
+      integer istat, system
+      real*8 dt,dtsave,wall,cpu
       logical exist
       character*20 keyword
       character*240 record
       character*240 string
 c
+cfl check this
+       istat = system('mkdir -p ./scratch')
+       open (unit=37,file='./scratch/stp.pid',status='unknown',
+     $    access='sequential')
+       write(37,*) 0
+       close (37)
 c
 c     set up the structure and molecular mechanics calculation
 c
@@ -271,7 +278,25 @@ c
 c
 c     integrate equations of motion to take a time step
 c
+cfl check this!
+      if (use_qmmm) then
+        open (unit=100,file='qminfo.log',status='unknown',
+     $    access='sequential')
+        write (100,1000)
+        write (100,*)
+        close (100)
+      end if
+c
+ 1000 format('  Step              E(SCF)             E(TD)     Dip X',
+     $  '     Dip Y     Dip Z  Tr Dip X  Tr Dip Y  Tr Dip Z',
+     $  '  QM f_max  MM f_max     time      ps/day')
+c
       do istep = 1, nstep
+         open (unit=37,file='./scratch/stp.pid',status='unknown',
+     $      access='sequential')
+         write(37,*) istep
+         close (37)
+         call settime
          if (integrate .eq. 'VERLET') then
             call verlet (istep,dt)
          else if (integrate .eq. 'STOCHASTIC') then
@@ -291,7 +316,11 @@ c
          else
             call beeman (istep,dt)
          end if
+         call gettime(wall,cpu)
+         if (use_qmmm) call qmwrite(100,istep,dt,wall)
       end do
+      istat = system('rm -fr ./scratch')
+      close (100)
 c
 c     perform any final tasks before program exit
 c

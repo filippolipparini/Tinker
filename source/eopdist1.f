@@ -65,7 +65,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nopdist,iopd,opdk,use,
 !$OMP& x,y,z,copd,qopd,popd,sopd,opdunit,use_group,use_polymer)
-!$OMP& shared(eopd,deopd,vir)
+!$OMP& shared(eopd,deopd,vir,qmatoms)
 !$OMP DO reduction(+:eopd,deopd,vir) schedule(guided)
 c
 c     calculate the out-of-plane distance energy and derivatives
@@ -75,6 +75,11 @@ c
          ib = iopd(2,i)
          ic = iopd(3,i)
          id = iopd(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
          force = opdk(i)
 c
 c     decide whether to compute the current interaction

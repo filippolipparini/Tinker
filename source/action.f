@@ -41,6 +41,7 @@ c     nes     number of solvation energy terms computed
 c     nelf    number of metal ligand field energy terms computed
 c     neg     number of geometric restraint energy terms computed
 c     nex     number of extra energy terms computed
+c     neqmmm  number of qmmm energy terms computer
 c
 c
       module action
@@ -52,6 +53,6 @@ c
       integer ner,nedsp,nec,necd
       integer ned,nem,nep,nect
       integer new,nerxf,nes,nelf
-      integer neg,nex
+      integer neg,nex,neqmmm
       save
       end

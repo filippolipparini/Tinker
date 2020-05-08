@@ -52,7 +52,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nurey,iury,ul,uk,
 !$OMP& use,x,y,z,cury,qury,ureyunit,use_group,use_polymer)
-!$OMP& shared(eub,deub,vir)
+!$OMP& shared(eub,deub,vir,qmatoms)
 !$OMP DO reduction(+:eub,deub,vir) schedule(guided)
 c
 c     calculate the Urey-Bradley 1-3 energy and first derivatives
@@ -60,6 +60,10 @@ c
       do i = 1, nurey
          ia = iury(1,i)
          ic = iury(3,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ic)) cycle
          ideal = ul(i)
          force = uk(i)
 c

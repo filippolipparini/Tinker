@@ -107,7 +107,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(ntors,itors,tors1,tors2,tors3,
 !$OMP& tors4,tors5,tors6,use,x,y,z,torsunit,use_group,use_polymer)
-!$OMP& shared(et,det,vir)
+!$OMP& shared(et,det,vir,qmatoms)
 !$OMP DO reduction(+:et,det,vir) schedule(guided)
 c
 c     calculate the torsional angle energy and first derivatives
@@ -120,6 +120,39 @@ c
 c
 c     decide whether to compute the current interaction
 c
+cfl check this
+         if (qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic) .and.
+     $       qmatoms(id)) cycle
+
+         if (use_pbond(ia) .or. use_pbond(ib) .or. use_pbond(ic)
+     $         .or. use_pbond(id)) then
+c              print*, '>>>> In torsions <<<<'
+              if (use_pbond(ia) .and.
+     $            qmatoms(ib) .and. qmatoms(ic) .and. qmatoms(id)) then
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              elseif (use_pbond(ib) .and.
+     $            qmatoms(ic) .and. qmatoms(ia) .and. qmatoms(id)) then
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              elseif (use_pbond(ic) .and.
+     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(id)) then
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              elseif (use_pbond(id) .and.
+     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic)) then
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              end if
+         end if
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,id,0,0)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or.
@@ -430,6 +463,11 @@ c
          ib = itors(2,i)
          ic = itors(3,i)
          id = itors(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c

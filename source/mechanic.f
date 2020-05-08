@@ -111,6 +111,10 @@ c
       call kgeom
       call kextra
 c
+c     set up various qmmm quantities
+c
+      if (use_qmmm) call kqmmm
+c
 c     assign electrostatic and dispersion Ewald sum parameters
 c
       call kewald

@@ -85,7 +85,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(ntors,itors,tors1,tors2,tors3,
 !$OMP& tors4,tors5,tors6,use,x,y,z,torsunit,use_group,use_polymer)
-!$OMP& shared(et)
+!$OMP& shared(et,qmatoms)
 !$OMP DO reduction(+:et) schedule(guided)
 c
 c     calculate the torsional angle energy term
@@ -95,6 +95,11 @@ c
          ib = itors(2,i)
          ic = itors(3,i)
          id = itors(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c
@@ -312,6 +317,11 @@ c
          ib = itors(2,i)
          ic = itors(3,i)
          id = itors(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c

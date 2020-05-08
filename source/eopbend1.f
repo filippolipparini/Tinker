@@ -77,7 +77,7 @@ c     OpenMP directives for the major loop structure
 c
 !$OMP PARALLEL default(private) shared(nopbend,iopb,iang,opbk,use,
 !$OMP& x,y,z,opbtyp,copb,qopb,popb,sopb,opbunit,use_group,use_polymer)
-!$OMP& shared(eopb,deopb,vir)
+!$OMP& shared(eopb,deopb,vir,qmatoms)
 !$OMP DO reduction(+:eopb,deopb,vir) schedule(guided)
 c
 c     calculate the out-of-plane bending energy and derivatives
@@ -88,10 +88,48 @@ c
          ib = iang(2,i)
          ic = iang(3,i)
          id = iang(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
          force = opbk(iopbend)
 c
 c     decide whether to compute the current interaction
 c
+cfl check this
+           if (use_pbond(ia) .or. use_pbond(ib) .or. use_pbond(ic)
+     $         .or. use_pbond(id)) then
+              if (use_pbond(ia) .and.
+     $            qmatoms(ib) .and. qmatoms(ic) .and. qmatoms(id)) then
+c                  print*, '>>>> In out-of-plane <<<<'
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              elseif (use_pbond(ib) .and.
+     $            qmatoms(ic) .and. qmatoms(ia) .and. qmatoms(id)) then
+c                  print*, '>>>> In out-of-plane <<<<'
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              elseif (use_pbond(ic) .and.
+     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(id)) then
+c                  print*, '>>>> In out-of-plane <<<<'
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              elseif (use_pbond(id) .and.
+     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic)) then
+c                  print*, '>>>> In out-of-plane <<<<'
+c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
+c                  print*,use_pbond(id)
+c                  print*,ia,ib,ic,id
+                  cycle
+              end if
+           end if
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,id,0,0)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or.

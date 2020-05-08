@@ -85,7 +85,7 @@ c
 !$OMP PARALLEL default(private) shared(nstrtor,ist,itors,kst,bl,
 !$OMP& tors1,tors2,tors3,use,x,y,z,storunit,use_group,use_polymer,
 !$OMP& name,verbose,debug,header,iout)
-!$OMP& shared(ebt,nebt,aebt)
+!$OMP& shared(ebt,nebt,aebt,qmatoms)
 !$OMP DO reduction(+:ebt,nebt,aebt) schedule(guided)
 c
 c     calculate the stretch-torsion interaction energy term
@@ -96,6 +96,11 @@ c
          ib = itors(2,i)
          ic = itors(3,i)
          id = itors(4,i)
+c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id)) cycle
 c
 c     decide whether to compute the current interaction
 c
