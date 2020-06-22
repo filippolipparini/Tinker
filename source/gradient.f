@@ -245,7 +245,7 @@ c
 c
 c     call qm/mm gradient with gaussian routine
 c
-c     if (use_qmmm) call eqmmm1
+      if (use_qmmm) call eqmmm1
 c
 c     sum up to get the total energy and first derivatives
 c

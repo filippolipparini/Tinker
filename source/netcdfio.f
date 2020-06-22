@@ -23,6 +23,7 @@ c
       integer*4 dimidframe(1),dimidcoordinates(3)
       integer*4 dimidcelll(2),dimidcella(2)
       integer*4 varid,nloc
+      integer*4 len3
       integer istep
       real*8 crdmin,crdmax
       logical opened
@@ -49,6 +50,7 @@ c     external nf90_global, nf90_enddef, nf90_open, nf90_write
 c     external nf90_inq_varid, nf90_put_var, nf90_close
 c
 
+      len3 = int(3,4)
       nloc = int(n,4)
 c
       netcdffile = filename(1:leng)//'.nc'
@@ -62,10 +64,10 @@ c
 c     create the netcdf dimensions
 c
         status = nf90_def_dim(ncid,"frame",NF90_unlimited,dimframe)
-        status = nf90_def_dim(ncid,"spatial",3,dimspatial)
+        status = nf90_def_dim(ncid,"spatial",len3,dimspatial)
         status = nf90_def_dim(ncid,"atom",nloc,dimatoms)
-        status = nf90_def_dim(ncid,"cell_spatial",3,dimcells)
-        status = nf90_def_dim(ncid,"cell_angular",3,dimcella)
+        status = nf90_def_dim(ncid,"cell_spatial",len3,dimcells)
+        status = nf90_def_dim(ncid,"cell_angular",len3,dimcella)
         dimidchar(1) = int(dimspatial,4)
         dimidcellspatial(1) = int(dimcells,4)
         dimidcellangular(1) = int(dimcella,4)

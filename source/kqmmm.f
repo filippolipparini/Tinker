@@ -87,8 +87,8 @@ c
 c     read the header and close the file.
 c
       call rd_head(iumat,nlab,nattmp,nbasis,ian,iattyp,atmchg,cgau,
-     &  ibfatm,atmwgt,nfc,nfv,itran,idum9,nshao,nprao,nshdb,nprdb,
-     &  nbtot)
-      call close_matf(iumat)
+     &  ibfatm,ibftyp,atmwgt,nfc,nfv,itran,idum9,nshao,nprao,nshdb,
+     &  nprdb,nbtot)
+      call close_matf(.false.,iumat)
       return
       end

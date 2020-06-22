@@ -67,8 +67,8 @@ APBS_LIBS = -lapbsmainroutines -lapbs -lmaloc -lapbsblas
 ##  Parallel:  OpenMP
 
 F77 = gfortran
-F77FLAGS = -c -cpp -DUSE_NETCDF -I/usr/include -L/usr/lib64
-OPTFLAGS = -Ofast -msse3 -fopenmp
+F77FLAGS = -c -cpp -DUSE_NETCDF -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g
+OPTFLAGS = -Ofast -msse3 -fopenmp -fdefault-integer-8
 #OPTFLAGS = -Og -fbacktrace -fcheck=bounds -Wunused -Wmaybe-uninitialized
 LIBDIR = -L. -L$(TINKER_LIBDIR)/linux -Wl,--no-as-needed -ldl
 LIBS = -lnetcdff
@@ -335,6 +335,9 @@ OBJS =	action.o \
 	epolar1.o \
 	epolar2.o \
 	epolar3.o \
+	eqmmm.o \
+	eqmmm1.o \
+	eqmmm3.o \
 	erepel.o \
 	erepel1.o \
 	erepel2.o \
@@ -797,7 +800,8 @@ EXEFILES = alchemy.x \
 	${F77} ${F77FLAGS} ${OPTFLAGS} $< -o $@ 
 
 %.x: %.o libtinker.a
-	${F77} ${LINKFLAGS} -o $@ ${LIBDIR} ${FFTW_LIBDIR} $^ ${FFTW_LIBS} ${LIBS}; strip $@
+	${F77} ${LINKFLAGS} -o $@ ${LIBDIR} ${FFTW_LIBDIR} $^ ${FFTW_LIBS} ${LIBS} #; strip $@
+	mv $@ ../bin/${@:r}
 
 #all: ${EXEFILES}
 all: analyze.x dynamic.x minimize.x testgrad.x
@@ -1234,6 +1238,9 @@ libtinker.a: ${OBJS}
 	epolar1.o \
 	epolar2.o \
 	epolar3.o \
+	eqmmm.o \
+	eqmmm1.o \
+	eqmmm3.o \
 	erepel.o \
 	erepel1.o \
 	erepel2.o \
@@ -1754,6 +1761,7 @@ epolar.o: atoms.o bound.o boxes.o cell.o chgpen.o chgpot.o couple.o energi.o ewa
 epolar1.o: atoms.o bound.o boxes.o cell.o chgpen.o chgpot.o couple.o deriv.o energi.o ewald.o limits.o math.o molcul.o mplpot.o mpole.o mrecip.o neigh.o pme.o polar.o polgrp.o polopt.o polpot.o poltcg.o potent.o shunt.o virial.o
 epolar2.o: atoms.o bound.o cell.o chgpen.o chgpot.o couple.o deriv.o hessn.o limits.o mplpot.o mpole.o polar.o polgrp.o polopt.o polpot.o poltcg.o potent.o shunt.o
 epolar3.o: action.o analyz.o atomid.o atoms.o bound.o boxes.o cell.o chgpen.o chgpot.o couple.o energi.o ewald.o inform.o inter.o iounit.o limits.o math.o molcul.o mplpot.o mpole.o neigh.o pme.o polar.o polgrp.o polpot.o potent.o shunt.o units.o
+eqmmm.o: atoms.o atomid.o deriv.o energi.o qmmm.o units.o usage.o
 erepel.o: atoms.o bound.o cell.o couple.o energi.o group.o inform.o inter.o limits.o mpole.o neigh.o potent.o repel.o reppot.o shunt.o usage.o
 erepel1.o: atoms.o bound.o cell.o couple.o deriv.o energi.o group.o inform.o limits.o mpole.o neigh.o potent.o repel.o reppot.o shunt.o usage.o virial.o
 erepel2.o: atoms.o bound.o cell.o couple.o deriv.o group.o hessn.o mpole.o potent.o repel.o reppot.o shunt.o usage.o

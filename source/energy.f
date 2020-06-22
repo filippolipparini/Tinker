@@ -130,7 +130,7 @@ c
 c
 c     call qm/mm energy with gaussian routine
 c
-c     if (use_qmmm) call eqmmm0
+      if (use_qmmm) call eqmmm0
 c
 c     sum up to give the total potential energy
 c
