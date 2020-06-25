@@ -30,7 +30,7 @@ c
       use usage
       use virial
       implicit none
-      integer i,k,itortor
+      integer i,k,itortor,nqm
       integer pos1,pos2
       integer ia,ib,ic,id,ie
       integer nlo,nhi,nt
@@ -95,7 +95,7 @@ c
 !$OMP PARALLEL default(private) shared(ntortor,itt,ibitor,
 !$OMP& use,x,y,z,tnx,ttx,tny,tty,tbf,tbx,tby,tbxy,ttorunit,
 !$OMP& use_group,use_polymer)
-!$OMP& shared(ett,dett,vir)
+!$OMP& shared(ett,dett,vir,qmatoms)
 !$OMP DO reduction(+:ett,dett,vir) schedule(guided)
 c
 c     calculate the torsion-torsion interaction energy term
@@ -116,6 +116,13 @@ c
             id = ibitor(2,i)
             ie = ibitor(1,i)
          end if
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (qmatoms(ie)) nqm = nqm + 1
+         if (nqm.gt.2) cycle
 c
 c     decide whether to compute the current interaction
 c

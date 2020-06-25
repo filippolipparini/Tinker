@@ -31,7 +31,7 @@ c
       use virial
       implicit none
       integer i,j,k,istrbnd
-      integer ia,ib,ic
+      integer ia,ib,ic,nqm
       real*8 e,dt
       real*8 dr1,dr2
       real*8 fgrp,angle
@@ -86,34 +86,14 @@ c
          force1 = sbk(1,istrbnd)
          force2 = sbk(2,istrbnd)
 c
-c     decide whether to compute the current interaction
+c     skip interaction if two or more atoms are qm
 c
-cfl check this
-         if (qmatoms(ia) .and. qmatoms(ib) .and.                      
-     $          qmatoms(ic)) cycle                                    
-                                                                      
-         if (use_pbond(ia) .or. use_pbond(ib) .or.                    
-     $       use_pbond(ic)) then                                      
-            if (use_pbond(ia) .and.                                   
-     $          qmatoms(ib) .and. qmatoms(ic)) then                   
-c                print*, '>>>> In strech-bnd <<<<'                    
-c                print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                print*,ia,ib,ic                                      
-                cycle                                                 
-            elseif (use_pbond(ib) .and.                               
-     $          qmatoms(ic) .and. qmatoms(ia)) then                   
-c                print*, '>>>> In strech-bnd <<<<'                    
-c                print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                print*,ia,ib,ic                                      
-                cycle                                                 
-            elseif (use_pbond(ic) .and.                               
-     $          qmatoms(ia) .and. qmatoms(ib)) then                   
-c                print*, '>>>> In strech-bnd <<<<'                    
-c                print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                print*,ia,ib,ic                                      
-                cycle                                                 
-            end if                                                    
-         end if                                                       
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1 
+         if (qmatoms(ib)) nqm = nqm + 1 
+         if (qmatoms(ic)) nqm = nqm + 1 
+         if (nqm.ge.2) cycle
+C
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,0,0,0)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or. use(ic))

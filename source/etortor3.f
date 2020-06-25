@@ -32,7 +32,7 @@ c
       use tortor
       use usage
       implicit none
-      integer i,k,itortor
+      integer i,k,itortor,nqm
       integer pos1,pos2
       integer ia,ib,ic,id,ie
       integer nlo,nhi,nt
@@ -108,11 +108,13 @@ c
             id = ibitor(2,i)
             ie = ibitor(1,i)
          end if
-c
-c     skip interaction if one of the atoms is qm
-c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id).or.qmatoms(ie)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (qmatoms(ie)) nqm = nqm + 1
+         if (nqm.gt.2) cycle
 c
 c     decide whether to compute the current interaction
 c

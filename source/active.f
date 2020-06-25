@@ -21,6 +21,7 @@ c
       use inform
       use iounit
       use keys
+      use potent
       use usage
       implicit none
       integer i,j,kk,next
@@ -120,6 +121,8 @@ c
                nqmatoms = nqmatoms + 1
             end do
          else if (keyword(1:8) .eq. 'PBATOMS ') then                 
+            write(iout,*) ' pseudo-bonds not supported'
+            call fatal
             read (string,*,err=26,end=26)  (pbond(i),i=npbond+1,n)   
   26        continue                                                 
             do while (pbond(npbond+1) .ne. 0)                        

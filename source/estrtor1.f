@@ -30,7 +30,7 @@ c
       use virial
       implicit none
       integer i,k,istrtor
-      integer ia,ib,ic,id
+      integer ia,ib,ic,id,nqm
       real*8 e,dr,fgrp
       real*8 rt2,ru2,rtru
       real*8 rba,rcb,rdc
@@ -94,10 +94,14 @@ c
          ic = itors(3,i)
          id = itors(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip if there is more than a QM atom
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.ge.2) cycle
 c
 c     decide whether to compute the current interaction
 c

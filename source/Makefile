@@ -202,6 +202,8 @@ OBJS =	action.o \
 	cell.o \
 	center.o \
 	charge.o \
+	checklink.o \
+	checkqmmm.o \
 	chgpen.o \
 	chgpot.o \
 	chgtrn.o \
@@ -1111,6 +1113,8 @@ libtinker.a: ${OBJS}
 	cell.o \
 	center.o \
 	charge.o \
+	checklink.o \
+	checkqmmm.o \
 	chgpen.o \
 	chgpot.o \
 	chgtrn.o \
@@ -1630,6 +1634,8 @@ calendar.o:
 cell.o:
 center.o: align.o
 charge.o:
+checklink.o: couple.o iounit.o usage.o
+checkqmmm.o: fields.o iounit.o potent.o usage.o
 chgpot.o:
 chgtrn.o:
 chkpole.o: atoms.o mpole.o

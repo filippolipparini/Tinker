@@ -28,7 +28,7 @@ c
       use usage
       implicit none
       integer i,j,k,istrbnd
-      integer ia,ib,ic
+      integer ia,ib,ic,nqm
       real*8 e,dt
       real*8 dr1,dr2
       real*8 fgrp,angle
@@ -64,9 +64,13 @@ c
          ib = iang(2,i)
          ic = iang(3,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if two or more atoms are qm
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1 
+         if (qmatoms(ib)) nqm = nqm + 1 
+         if (qmatoms(ic)) nqm = nqm + 1 
+         if (nqm.ge.2) cycle
          force1 = sbk(1,istrbnd)
          force2 = sbk(2,istrbnd)
 c

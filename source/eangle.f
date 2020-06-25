@@ -27,7 +27,7 @@ c
       use math
       use usage
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,ideal,force
       real*8 fold,factor
       real*8 dot,cosine
@@ -72,10 +72,21 @@ c
          ic = iang(3,i)
          id = iang(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if three atoms are qm 
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (angtyp(i) .eq. 'IN-PLANE') then
+c          handle out-of-plane bendings
+           if (qmatoms(id)) nqm = nqm + 1
+         end if
+         if (nqm.gt.1) cycle
+c  10 format(A,4I5,X,A)
+c        if (nqm.eq.1) write(6,10) 'qmmm angl', ia, ib, ic, id,
+c    $     angtyp(i)
+c
          ideal = anat(i)
          force = ak(i)
 c

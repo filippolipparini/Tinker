@@ -561,6 +561,7 @@ atom        413   84    F-    "Fluoride Ion F-"              9    18.998    0
 atom        414   85    Cl-   "Chloride Ion Cl-"            17    35.453    0
 atom        415   86    Br-   "Bromide Ion Br-"             35    79.904    0
 atom        416   87    I-    "Iodide Ion I-"               53   126.904    0
+atom        999   88    XX    "boh"                        102   999.000    0
 
 
       ################################

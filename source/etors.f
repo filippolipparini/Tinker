@@ -51,7 +51,7 @@ c
       use tors
       use usage
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,rcb,fgrp
       real*8 xt,yt,zt,rt2
       real*8 xu,yu,zu,ru2
@@ -96,10 +96,14 @@ c
          ic = itors(3,i)
          id = itors(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if there are more than two qm atoms
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.ge.3) cycle
 c
 c     decide whether to compute the current interaction
 c
@@ -238,7 +242,7 @@ c
       use usage
       use warp
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,rcb,fgrp
       real*8 width,wterm
       real*8 xt,yt,zt,rt2
@@ -318,10 +322,14 @@ c
          ic = itors(3,i)
          id = itors(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if there are more than two qm atoms
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.ge.3) cycle
 c
 c     decide whether to compute the current interaction
 c

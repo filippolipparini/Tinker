@@ -22,13 +22,14 @@ c
       use keys
       use qmmm
       implicit none
-      integer i,k,next,istat,nattmp
+      integer i,k,next,istat,nattmp,status
       real*8 rd
       logical header
       character*20 keyword
       character*20 value
       character*240 record
       character*240 string
+      character*240 command
 c
 c     read the name of the gaussian input and matrix elements file.
 c     note that the program expects a gau_name.com and mat_name.mat
@@ -57,6 +58,19 @@ c
             mat_name(1:lmname) = trim(value)
          else if (keyword(1:10) .eq. 'QMMM-XLBO ') then
             xlbo = .true.
+c
+c           create a second gaussian file with the appropriate
+c           keywords to do xlbo.
+c
+            write(command,*) 'cat ', gau_name(1:lgname),
+     $        ' | sed -e s/useoao/readoao/g > ',gau_name(1:lgname-4),
+     $        '_xlbo.com'
+            write(6,*) command
+            status = system(command)
+            if (status.ne.0) then
+              write(6,*) 'Could not prepare XLBO .com file.'
+              call fatal
+            end if
          end if
       end do
 c

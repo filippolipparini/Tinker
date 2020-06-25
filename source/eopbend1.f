@@ -31,7 +31,7 @@ c
       use virial
       implicit none
       integer i,iopbend
-      integer ia,ib,ic,id
+      integer ia,ib,ic,id,nqm
       real*8 e,angle,force
       real*8 dot,sine,fgrp
       real*8 cc,ee,term
@@ -91,45 +91,16 @@ c
 c
 c     skip interaction if one of the atoms is qm
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.gt.1) cycle
          force = opbk(iopbend)
 c
 c     decide whether to compute the current interaction
 c
-cfl check this
-           if (use_pbond(ia) .or. use_pbond(ib) .or. use_pbond(ic)
-     $         .or. use_pbond(id)) then
-              if (use_pbond(ia) .and.
-     $            qmatoms(ib) .and. qmatoms(ic) .and. qmatoms(id)) then
-c                  print*, '>>>> In out-of-plane <<<<'
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              elseif (use_pbond(ib) .and.
-     $            qmatoms(ic) .and. qmatoms(ia) .and. qmatoms(id)) then
-c                  print*, '>>>> In out-of-plane <<<<'
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              elseif (use_pbond(ic) .and.
-     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(id)) then
-c                  print*, '>>>> In out-of-plane <<<<'
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              elseif (use_pbond(id) .and.
-     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic)) then
-c                  print*, '>>>> In out-of-plane <<<<'
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              end if
-           end if
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,id,0,0)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or.

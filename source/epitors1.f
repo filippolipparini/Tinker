@@ -98,61 +98,13 @@ c
          ie = ipit(5,i)
          ig = ipit(6,i)
 c
+c     skip interaction if one of the atoms is qm
+c
+         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
+     $    qmatoms(id).or.qmatoms(ie).or.qmatoms(ig)) cycle
+c
 c     decide whether to compute the current interaction
 c
-cfl check this
-         if (qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic) .and.
-     $       qmatoms(id) .and. qmatoms(ie) .and. qmatoms(ig)) cycle
-
-           if (use_pbond(ia) .or. use_pbond(ib) .or. use_pbond(ic)
-     $         .or. use_pbond(id) .or. use_pbond(ie)
-     $         .or. use_pbond(ig)) then
-c              print*, '>>>> In pi-torsions <<<<'
-              if (use_pbond(ia) .and. qmatoms(ib) .and. qmatoms(ic)
-     $            .and. qmatoms(id) .and. qmatoms(ie)
-     $            .and. qmatoms(ig)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id),use_pbond(ie),use_pbond(ig)
-c                  print*,ia,ib,ic,id,ie,ig
-                  cycle
-              elseif (use_pbond(ib) .and. qmatoms(ia) .and. qmatoms(ic)
-     $            .and. qmatoms(id) .and. qmatoms(ie)
-     $            .and. qmatoms(ig)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id),use_pbond(ie),use_pbond(ig)
-c                  print*,ia,ib,ic,id,ie,ig
-                  cycle
-              elseif (use_pbond(ic) .and. qmatoms(ib) .and. qmatoms(ia)
-     $            .and. qmatoms(id) .and. qmatoms(ie)
-     $            .and. qmatoms(ig)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id),use_pbond(ie),use_pbond(ig)
-c                  print*,ia,ib,ic,id,ie,ig
-                  cycle
-              elseif (use_pbond(id) .and. qmatoms(ib) .and. qmatoms(ic)
-     $            .and. qmatoms(ia) .and. qmatoms(ie)
-     $            .and. qmatoms(ig)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id),use_pbond(ie),use_pbond(ig)
-c                  print*,ia,ib,ic,id,ie,ig
-                  cycle
-              elseif (use_pbond(ie) .and. qmatoms(ib) .and. qmatoms(ic)
-     $            .and. qmatoms(id) .and. qmatoms(ia)
-     $            .and. qmatoms(ig)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id),use_pbond(ie),use_pbond(ig)
-c                  print*,ia,ib,ic,id,ie,ig
-                  cycle
-              elseif (use_pbond(ig) .and. qmatoms(ib) .and. qmatoms(ic)
-     $            .and. qmatoms(id) .and. qmatoms(ie)
-     $            .and. qmatoms(ia)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id),use_pbond(ie),use_pbond(ig)
-c                  print*,ia,ib,ic,id,ie,ig
-                  cycle
-             end if             
-          end if                
-
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,id,ie,ig)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or. use(ic) .or.

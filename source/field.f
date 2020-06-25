@@ -54,6 +54,7 @@ c
       use_metal = .false.
       use_geom = .true.
       use_extra = .true.
+      use_qmmm = .false.
 c
 c     read the potential energy force field parameter file
 c

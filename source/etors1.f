@@ -55,7 +55,7 @@ c
       use usage
       use virial
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,rcb
       real*8 dedphi,fgrp
       real*8 v1,v2,v3,v4,v5,v6
@@ -118,41 +118,15 @@ c
          ic = itors(3,i)
          id = itors(4,i)
 c
-c     decide whether to compute the current interaction
+c     skip interaction if there are more than two qm atoms
 c
-cfl check this
-         if (qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic) .and.
-     $       qmatoms(id)) cycle
-
-         if (use_pbond(ia) .or. use_pbond(ib) .or. use_pbond(ic)
-     $         .or. use_pbond(id)) then
-c              print*, '>>>> In torsions <<<<'
-              if (use_pbond(ia) .and.
-     $            qmatoms(ib) .and. qmatoms(ic) .and. qmatoms(id)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              elseif (use_pbond(ib) .and.
-     $            qmatoms(ic) .and. qmatoms(ia) .and. qmatoms(id)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              elseif (use_pbond(ic) .and.
-     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(id)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              elseif (use_pbond(id) .and.
-     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic)) then
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                  print*,use_pbond(id)
-c                  print*,ia,ib,ic,id
-                  cycle
-              end if
-         end if
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.ge.3) cycle
+c
          proceed = .true.
          if (use_group)  call groups (proceed,fgrp,ia,ib,ic,id,0,0)
          if (proceed)  proceed = (use(ia) .or. use(ib) .or.
@@ -367,7 +341,7 @@ c
       use virial
       use warp
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,rcb,dedphi
       real*8 width,wterm,fgrp
       real*8 v1,v2,v3,v4,v5,v6
@@ -464,10 +438,14 @@ c
          ic = itors(3,i)
          id = itors(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if there are more than two qm atoms
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.ge.3) cycle
 c
 c     decide whether to compute the current interaction
 c

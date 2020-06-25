@@ -30,7 +30,7 @@ c
       use usage
       use virial
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,ideal,force
       real*8 fold,factor,dot
       real*8 cosine,sine
@@ -94,10 +94,21 @@ c
          ic = iang(3,i)
          id = iang(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if two atoms are qm
 c
-c         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-c     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (angtyp(i) .eq. 'IN-PLANE') then
+c          handle out-of-plane bendings
+           if (qmatoms(id)) nqm = nqm + 1
+         end if
+         if (nqm.gt.1) cycle
+c  10 format(A,4I5,X,A)
+c        if (nqm.eq.1) write(6,10) 'qmmm angl', ia, ib, ic, id,
+c    $     angtyp(i)
+c
          ideal = anat(i)
          force = ak(i)
 c
@@ -105,71 +116,10 @@ c     decide whether to compute the current interaction
 c
          proceed = .true.
          if (angtyp(i) .eq. 'IN-PLANE') then
-            if (qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic) .and. 
-     $       qmatoms(id)) cycle                                       
             if (use_group)  call groups (proceed,fgrp,ia,ib,ic,id,0,0)
-cfl check this
             if (proceed)  proceed = (use(ia) .or. use(ib) .or.
      &                                 use(ic) .or. use(id))
-
-           if (use_pbond(ia) .or. use_pbond(ib) .or. use_pbond(ic)      
-     $         .or. use_pbond(id)) then                                 
-c              print*, '>>>> In angles IN-PLANE<<<<'                    
-              if (use_pbond(ia) .and.                                   
-     $            qmatoms(ib) .and. qmatoms(ic) .and. qmatoms(id)) then 
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                  print*,use_pbond(id)                                 
-c                  print*,ia,ib,ic,id                                   
-                  cycle                                                 
-              elseif (use_pbond(ib) .and.                               
-     $            qmatoms(ic) .and. qmatoms(ia) .and. qmatoms(id)) then 
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                  print*,use_pbond(id)                                 
-c                  print*,ia,ib,ic,id                                   
-                  cycle                                                 
-              elseif (use_pbond(ic) .and.                               
-     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(id)) then 
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                  print*,use_pbond(id)                                 
-c                  print*,ia,ib,ic,id                                   
-                  cycle                                                 
-              elseif (use_pbond(id) .and.                               
-     $            qmatoms(ia) .and. qmatoms(ib) .and. qmatoms(ic)) then 
-c                  print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)     
-c                  print*,use_pbond(id)                                 
-c                  print*,ia,ib,ic,id                                   
-                  cycle                                                 
-              end if                                                    
-           end if                                                       
-
          else
-           if (qmatoms(ia) .and. qmatoms(ib) .and.
-     $          qmatoms(ic)) cycle
-
-           if (use_pbond(ia) .or. use_pbond(ib) .or.
-     $         use_pbond(ic)) then
-
-c              print*, '>>>> In angles NO-IN-PLANE<<<<'
-
-              if (use_pbond(ia) .and.
-     $           qmatoms(ib) .and. qmatoms(ic)) then
-c                 print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                 print*,ia,ib,ic
-                 cycle
-              elseif (use_pbond(ib) .and.
-     $           qmatoms(ic) .and. qmatoms(ia)) then
-c                 print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                 print*,ia,ib,ic
-                 cycle
-              elseif (use_pbond(ic) .and.
-     $           qmatoms(ia) .and. qmatoms(ib)) then
-c                 print*,use_pbond(ia),use_pbond(ib),use_pbond(ic)
-c                 print*,ia,ib,ic
-                 cycle
-              end if
-           end if
-
-
             if (use_group)  call groups (proceed,fgrp,ia,ib,ic,0,0,0)
             if (proceed)  proceed = (use(ia) .or. use(ib) .or. use(ic))
          end if

@@ -176,9 +176,9 @@ c
 c
 c              parameters not needed if two or more atoms are qm
 c
-               write(6,*) 'iangle =', i
-               write(6,'(a,8(i4,l2))') 'ia,ib,ic,id=', ia,qmatoms(ia),
-     $  ib,qmatoms(ib),ic,qmatoms(ic),id,qmatoms(id)
+c              write(6,*) 'iangle =', i
+c              write(6,'(a,8(i4,l2))') 'ia,ib,ic,id=', ia,qmatoms(ia),
+c    $  ib,qmatoms(ib),ic,qmatoms(ic),id,qmatoms(id)
                nqm = 0
                if (qmatoms(ia)) nqm = nqm + 1
                if (qmatoms(ib)) nqm = nqm + 1
@@ -187,8 +187,8 @@ c
                if (nqm.ge.2 .and. nqm.lt.4) then
                  write(iout,*) ' WARNING: oop bend through a link atom'
                  write(iout,*) ' skipping this force field term.'
-                 cycle
                end if
+               if (nqm.ge.2) cycle
 c
                size = 4
                call numeral (ita,pa,size)

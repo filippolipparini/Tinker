@@ -24,7 +24,7 @@ c
       use group
       use usage
       implicit none
-      integer i,ia,ib
+      integer i,ia,ib,nqm
       real*8 e,ideal,force
       real*8 expterm,bde
       real*8 dt,dt2,fgrp
@@ -50,9 +50,15 @@ c
          ia = ibnd(1,i)
          ib = ibnd(2,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if both the atoms are qm 
 c
-         if (qmatoms(ia).or.qmatoms(ib)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (nqm.eq.2) cycle
+c  10 format(A,4I5)
+c        if (nqm.ge.1) write(6,10) 'qmmm bond', ia, ib
+c
          ideal = bl(i)
          force = bk(i)
 c

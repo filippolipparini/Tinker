@@ -33,7 +33,7 @@ c
       use opbend
       use usage
       implicit none
-      integer i,iopbend
+      integer i,iopbend,nqm
       integer ia,ib,ic,id
       real*8 e,angle,force
       real*8 sine,fgrp
@@ -93,8 +93,12 @@ c
 c
 c     skip interaction if one of the atoms is qm
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.gt.1) cycle
          force = opbk(iopbend)
 c
 c     decide whether to compute the current interaction

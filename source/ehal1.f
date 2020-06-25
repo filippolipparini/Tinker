@@ -180,9 +180,6 @@ c
             k = ivdw(kk)
             kv = ired(k)
             if (qmatoms(i).and.qmatoms(k)) cycle
-            if (use_pbond(i) .and. use_pbond(k)) cycle
-            if (qmatoms(i) .and. use_pbond(k)) cycle
-            if (use_pbond(i) .and. qmatoms(k)) cycle
             mutk = mut(k)
             proceed = .true.
             if (use_group)  call groups (proceed,fgrp,i,k,0,0,0,0)

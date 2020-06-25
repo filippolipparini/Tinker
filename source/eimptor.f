@@ -24,7 +24,7 @@ c
       use torpot
       use usage
       implicit none
-      integer i,ia,ib,ic,id
+      integer i,ia,ib,ic,id,nqm
       real*8 e,rcb,fgrp
       real*8 xt,yt,zt
       real*8 xu,yu,zu
@@ -67,10 +67,14 @@ c
          ic = iitors(3,i)
          id = iitors(4,i)
 c
-c     skip interaction if one of the atoms is qm
+c     skip interaction if more than one of the atoms is qm
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic).or.
-     $    qmatoms(id)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (qmatoms(id)) nqm = nqm + 1
+         if (nqm.gt.1) cycle
 c
 c     decide whether to compute the current interaction
 c

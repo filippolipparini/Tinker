@@ -27,7 +27,7 @@ c
       use usage
       use virial
       implicit none
-      integer i,ia,ib
+      integer i,ia,ib,nqm
       real*8 e,ideal,force
       real*8 expterm,bde,fgrp
       real*8 dt,dt2,deddt
@@ -61,9 +61,15 @@ c
          ia = ibnd(1,i)
          ib = ibnd(2,i)
 c
+c     skip interaction if both the atoms are qm
+c
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (nqm.eq.2) cycle
+c  10 format(A,4I5)
 c     skip interaction if one of the atoms is qm
 c
-         if (qmatoms(ia).or.qmatoms(ib)) cycle
          ideal = bl(i)
          force = bk(i)
 c

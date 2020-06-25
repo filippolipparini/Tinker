@@ -30,7 +30,7 @@ c
       use urypot
       use usage
       implicit none
-      integer i,ia,ib,ic
+      integer i,ia,ib,ic,nqm
       real*8 e,ideal,force
       real*8 dt,dt2,fgrp
       real*8 xac,yac,zac,rac
@@ -73,9 +73,14 @@ c
          ib = iury(2,i)
          ic = iury(3,i)
 c
-c     skip interaction if one of the atoms is qm
+c        skip if there are more than a qm atom
 c
-         if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic)) cycle
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (qmatoms(ic)) nqm = nqm + 1
+         if (nqm.ge.2) cycle
+c
          ideal = ul(i)
          force = uk(i)
 c

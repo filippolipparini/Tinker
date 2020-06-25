@@ -42,6 +42,10 @@ c     get the base force field from parameter file and keyfile
 c
       call field
 c
+c     check that qmmm is consistent, if present
+c
+      call checkqmmm
+c
 c     find unit cell type, lattice parameters and cutoff values
 c
       call unitcell

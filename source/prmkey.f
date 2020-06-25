@@ -34,13 +34,11 @@ c
       use vdwpot
       implicit none
       integer next
-      logical ok_qmmm
       character*4 value
       character*20 keyword
       character*240 text
       character*240 record
       character*240 string
-c
 c
 c     parse the line to extract any possible keyword
 c
@@ -197,7 +195,6 @@ c
          use_qmmm = .true.
          if (value .eq. 'NONE')  use_qmmm = .false.
       else if (keyword(1:9) .eq. 'NETCDFIO ') then
-         write(6,*) 'here!'
 #ifdef USE_NETCDF
          call getword (record,value,next)
          netcdfsave = .true.
@@ -505,28 +502,6 @@ c
 c     jump directly to the end if any error was detected
 c
    10 continue
-c
-c     only amber, amoeba, opls and charmm force field are compatible
-c     with qmmm. 
-c     issue an error and abort if a different force field is used.
-      write(6,*) 'force field:', forcefield
-c
-      ok_qmmm = .false.
-      if (use_qmmm) then
-        if (forcefield(1:5).eq.'AMBER') then
-          ok_qmmm = .true.
-        else if (forcefield(1:6).eq.'AMOEBA') then
-          ok_qmmm = forcefield(1:11).ne.'AMOEBA-PLUS'
-        else if (forcefield(1:4).eq.'OPLS') then
-          ok_qmmm = .true.
-        else if (forcefield(1:6).eq.'CHARMM') then
-          ok_qmmm = .true.
-        end if
-        if (.not. ok_qmmm) then
-          write(6,*) ' qmmm and ', forcefield,' not supported.'
-          call fatal
-        end if
-      end if
 c
       return
       end
