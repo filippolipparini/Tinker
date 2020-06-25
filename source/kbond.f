@@ -30,7 +30,7 @@ c
       use potent
       use usage
       implicit none
-      integer i,j
+      integer i,j,nqm
       integer ia,ib,ita,itb
       integer nb,nb5,nb4,nb3
       integer size,next
@@ -195,6 +195,14 @@ c
       do i = 1, nbond
          ia = ibnd(1,i)
          ib = ibnd(2,i)
+c
+c    parameters are not needed if both are qm
+c
+         nqm = 0
+         if (qmatoms(ia)) nqm = nqm + 1
+         if (qmatoms(ib)) nqm = nqm + 1
+         if (nqm.eq.2) cycle
+c
          ita = class(ia)
          itb = class(ib)
          size = 4

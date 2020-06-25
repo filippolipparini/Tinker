@@ -28,8 +28,9 @@ c
       use kantor
       use potent
       use tors
+      use usage
       implicit none
-      integer i,j,k,l,m,nat
+      integer i,j,k,l,m,nat,nqm
       integer ia,ib,ic,id
       integer ita,itb,itc,itd
       integer size,next
@@ -153,6 +154,18 @@ c
             ib = itors(2,i)
             ic = itors(3,i)
             id = itors(4,i)
+            if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic)
+     &          .or.qmatoms(id)) then
+              nqm = 0
+              if (qmatoms(ia)) nqm = nqm + 1
+              if (qmatoms(ib)) nqm = nqm + 1
+              if (qmatoms(ic)) nqm = nqm + 1
+              if (qmatoms(id)) nqm = nqm + 1
+              if (nqm.ne.4) write(iout,*) 
+     &        ' WARNING: angle-torsion between MM and QM.'
+              write(iout,*) ' ignoring this force field term.'
+              cycle
+            end if
             ita = class(ia)
             itb = class(ib)
             itc = class(ic)

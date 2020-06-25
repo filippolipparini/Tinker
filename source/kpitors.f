@@ -28,8 +28,9 @@ c
       use pitors
       use potent
       use tors
+      use usage
       implicit none
-      integer i,j,npt
+      integer i,j,npt,nqm
       integer ia,ib
       integer ita,itb
       integer size,next
@@ -114,6 +115,11 @@ c
             ia = ibnd(1,i)
             ib = ibnd(2,i)
             if (n12(ia).eq.3 .and. n12(ib).eq.3) then
+               if (qmatoms(ia).neqv.qmatoms(ib)) then
+                 write(iout,*) ' link atom through a pi bond.'
+                 call fatal
+               end if
+               if (qmatoms(ia).and.qmatoms(ib)) cycle
                ita = class(ia)
                itb = class(ib)
                size = 4

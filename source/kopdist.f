@@ -29,8 +29,9 @@ c
       use kopdst
       use opdist
       use potent
+      use usage
       implicit none
-      integer i,j,nopd
+      integer i,j,nopd,nqm
       integer ia,ib,ic,id
       integer ita,itb,itc,itd
       integer imin,itmin
@@ -140,6 +141,18 @@ c
                ib = i12(1,i)
                ic = i12(2,i)
                id = i12(3,i)
+               if (qmatoms(ia).or.qmatoms(ib).or.qmatoms(ic)
+     &             .or.qmatoms(id)) then
+                 nqm = 0
+                 if (qmatoms(ia)) nqm = nqm + 1
+                 if (qmatoms(ib)) nqm = nqm + 1
+                 if (qmatoms(ic)) nqm = nqm + 1
+                 if (qmatoms(id)) nqm = nqm + 1
+                 if (nqm.ne.4) write(iout,*) 
+     &           ' WARNING: oop distance between MM and QM.'
+                 write(iout,*) ' ignoring this force field term.'
+                 cycle
+               end if
                ita = class(ia)
                itb = class(ib)
                itc = class(ic)

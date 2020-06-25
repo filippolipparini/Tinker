@@ -31,7 +31,7 @@ c
       use potent
       use usage
       implicit none
-      integer i,j,it
+      integer i,j,it,nqm
       integer ia,ib,ic,id
       integer ita,itb,itc,itd
       integer nopb,size
@@ -51,6 +51,7 @@ c
 c
 c     process keywords containing out-of-plane bend parameters
 c
+      write(6,*) 'in kopbend'
       blank = '                '
       zero4 = '0000'
       zero8 = '00000000'
@@ -69,6 +70,20 @@ c
             string = record(next:240)
             read (string,*,err=10,end=10)  ia,ib,ic,id,fopb
    10       continue
+c
+c           parameters not needed if two or more atoms are qm
+c
+c           nqm = 0
+c           if (qmatoms(ia)) nqm = nqm + 1
+c           if (qmatoms(ib)) nqm = nqm + 1
+c           if (qmatoms(ic)) nqm = nqm + 1
+c           if (qmatoms(id)) nqm = nqm + 1
+c           if (nqm.ge.2) then
+c             write(iout,*) ' WARNING: oop bend through a link atom'
+c             write(iout,*) ' skipping this force field term.'
+c             cycle
+c           end if
+c
             size = 4
             call numeral (ia,pa,size)
             call numeral (ib,pb,size)
@@ -158,6 +173,23 @@ c
                itc = class(ic)
                id = iang(4,i)
                itd = class(id)
+c
+c              parameters not needed if two or more atoms are qm
+c
+               write(6,*) 'iangle =', i
+               write(6,'(a,8(i4,l2))') 'ia,ib,ic,id=', ia,qmatoms(ia),
+     $  ib,qmatoms(ib),ic,qmatoms(ic),id,qmatoms(id)
+               nqm = 0
+               if (qmatoms(ia)) nqm = nqm + 1
+               if (qmatoms(ib)) nqm = nqm + 1
+               if (qmatoms(ic)) nqm = nqm + 1
+               if (qmatoms(id)) nqm = nqm + 1
+               if (nqm.ge.2 .and. nqm.lt.4) then
+                 write(iout,*) ' WARNING: oop bend through a link atom'
+                 write(iout,*) ' skipping this force field term.'
+                 cycle
+               end if
+c
                size = 4
                call numeral (ita,pa,size)
                call numeral (itb,pb,size)
