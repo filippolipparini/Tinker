@@ -40,5 +40,13 @@ c     check whether there are link atoms, and if these are well
 c     defined.
 c
       call checklink
+c
+c     Check if electrostatic is enabled
+c
+      if (use_qmmm .and. (use_charge.or.use_chgdpl.or.use_dipole.or.
+     $  use_mpole.or.use_polar)) then
+        write(6,*) 'electrostatic should not be enabled in Tinker'
+        call fatal
+      end if
       return
       end

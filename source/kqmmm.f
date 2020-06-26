@@ -19,12 +19,14 @@ c
       subroutine kqmmm
       use sizes
       use atoms
+      use atomid
       use keys
       use qmmm
+      use usage
       implicit none
       integer i,k,next,istat,nattmp,status
       real*8 rd
-      logical header
+      logical header,havemat
       character*20 keyword
       character*20 value
       character*240 record
@@ -38,7 +40,9 @@ c     if no file is explicitly given in input, the program assumes
 c     that the files are called gau.com and gau.mel
 c
       gau_name = 'gau.com'
+      lgname = 7
       mat_name = 'gau.mat'
+      lmname = 7
       called   = .false.
       nmat     = 0
 c
@@ -81,6 +85,32 @@ c
       if (istat.ne.0) then
          write(6,*) ' allocation error in kqmmm.'
          call fatal
+      end if
+c
+c     If doing full qm use gaussian to create a matrix element
+c
+      if (nqmatoms.eq.n) then
+        inquire(file=mat_name(1:lmname),exist=havemat)
+        if (.not.havemat) then
+          write(command,*) 'grep \# ',gau_name(1:lgname),
+     $      ' | sed -e s/geom=allcheck//g > bldmat.com'
+          status = system(command)
+          open (unit=100,file='bldmat.com',status='Unknown',
+     $      form='formatted',access='Append')
+          write(100,*)
+          write(100,*) 'Initial calculation'
+          write(100,*)
+          write(100,*) '0 1'
+          do i = 1, n
+            write(100,'(1i3,3x,3f16.8)') atomic(i),x(i),y(i),z(i)
+          end do
+          write(100,*)
+          write(100,*) mat_name(1:lmname)
+          write(100,*) 
+          close(100)
+          write(command,*) 'gdvtest bldmat.com'
+          status = system(command)
+        end if
       end if
 c
 c     open the matrix element file and read some information that will 

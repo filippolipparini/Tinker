@@ -19,7 +19,7 @@ c
       implicit none
       integer i,iglob,j,system,nattmp,ni,nr,ntot,lenbuf
       integer n1,n2,n3,n4,n5,nri,lcbuf,lr,lenarr,lnz,ioff,k
-      integer status, istat
+      integer status, istat, typea
       logical yesno,eof,asym
       real*8  dipole(3), vmax
       character*120 command
@@ -51,7 +51,7 @@ c
       call wr_head(iumat,n,3*n,nbasis,ian,iattyp,atmchg,cgau,ibfatm,
      $  ibftyp,atmwgt,nfc,nfv,itran,idum9,nshao,nprao,nshdb,nprdb,nbtot)
 c
-      call close_matf(iumat)
+      call close_matf(.true.,iumat)
 c
 c     launch the qm/mm calculation by gaussian
 c
@@ -89,11 +89,11 @@ c
       do while(.not. eof)
         cbuf = ' '
         call rd_labl(iumat,ivers,cbuf,ni,nr,ntot,lenbuf,n1,n2,n3,n4,n5,
-     $    asym,nri,eof)
+     $    typea,nri,eof)
         lcbuf = len_trim(cbuf)
         if (cbuf(1:lcbuf).eq.'GAUSSIAN SCALARS') then
           lr = lenarr(n1,n2,n3,n4,n5)
-          call rd_rind(iumat,nr,lr,ntot,lenbuf,lnz,gen) 
+          call rd_rind(iumat,nr,lr,ntot,lenbuf,gen) 
           escf = gen(32)*hartree
           etd  = gen(25)*hartree
           if (etd.ne.0.0d0) then
@@ -111,7 +111,7 @@ c
 c
 c     close the matrix elements file:
 c
-      call close_matf(iumat)
+      call close_matf(.false.,iumat)
 c
       return
       end
