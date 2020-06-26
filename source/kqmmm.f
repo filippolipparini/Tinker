@@ -40,9 +40,9 @@ c     if no file is explicitly given in input, the program assumes
 c     that the files are called gau.com and gau.mel
 c
       gau_name = 'gau.com'
-      lgname = 7
+      lgname   = 7
       mat_name = 'gau.mat'
-      lmname = 7
+      lmname   = 7
       called   = .false.
       nmat     = 0
 c
@@ -69,7 +69,6 @@ c
             write(command,*) 'cat ', gau_name(1:lgname),
      $        ' | sed -e s/useoao/readoao/g > ',gau_name(1:lgname-4),
      $        '_xlbo.com'
-            write(6,*) command
             status = system(command)
             if (status.ne.0) then
               write(6,*) 'Could not prepare XLBO .com file.'

@@ -73,11 +73,11 @@ c
          call fatal
       end if
 c
-      if (.not. called) then
-         called = .true.
-         nbasxl = nbasis
-         nttxl  = (nbasis*(nbasis+1))/2
-      end if
+c     if (.not. called) then
+c        called = .true.
+c        nbasxl = nbasis
+c        nttxl  = (nbasis*(nbasis+1))/2
+c     end if
 c
       call rd_head(iumat,nlab,nattmp,nbasis,ian,iattyp,atmchg,cgau,
      $  ibfatm,ibftyp,atmwgt,nfc,nfv,itran,idum9,nshao,nprao,nshdb,
