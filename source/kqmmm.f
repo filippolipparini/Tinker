@@ -86,26 +86,30 @@ c
          call fatal
       end if
 c
-c     If doing full qm use gaussian to create a matrix element
+c     If doing full qm use gaussian to create a matrix element file.
 c
       if (nqmatoms.eq.n) then
         inquire(file=mat_name(1:lmname),exist=havemat)
         if (.not.havemat) then
-          write(command,*) 'grep \# ',gau_name(1:lgname),
-     $      ' | sed -e s/geom=allcheck//g > bldmat.com'
+          write(command,*) 'cat ',gau_name(1:lgname-4),
+     $      '_init.com > bldmat.com'
           status = system(command)
+          if (status.ne.0) then
+            write(6,100)
+  100       format(' A full QM calculation requires either a matrix',
+     $        ' element file',/,
+     $        ' or a .com (basename_init.com) containing',
+     $        ' root, title, charge and spin multiplicity.')
+            call fatal
+          end if 
           open (unit=100,file='bldmat.com',status='Unknown',
      $      form='formatted',access='Append')
-          write(100,*)
-          write(100,*) 'Initial calculation'
-          write(100,*)
-          write(100,*) '0 1'
           do i = 1, n
             write(100,'(1i3,3x,3f16.8)') atomic(i),x(i),y(i),z(i)
           end do
           write(100,*)
           write(100,*) mat_name(1:lmname)
-          write(100,*) 
+          write(100,*)
           close(100)
           write(command,*) 'gdvtest bldmat.com'
           status = system(command)

@@ -69,10 +69,16 @@ c
 c
 c     launch the qm/mm calculation by gaussian
 c
-      write(command,*) 'gdvtest ',gau_name(1:lgname)
-      if (xlbo .and. nmat.ge.9) 
-     $  write(command,*) 'gdvtest ',gau_name(1:lgname-4),'_xlbo.com'
+      if (xlbo .and. nmat.ge.9) then 
+        write(command,*) 'gdvtest ',gau_name(1:lgname-4),'_xlbo.com'
+      else
+        write(command,*) 'gdvtest ',gau_name(1:lgname)
+      end if
       status = system(command)
+      if (status.ne.0) then
+        write(6,*) 'Error returned in Gaussian calculation'
+        call fatal
+      end if
 c
 c     open the matrix element file and read the energy and forces:
 c
