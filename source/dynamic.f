@@ -40,13 +40,6 @@ c
       character*240 record
       character*240 string
 c
-cfl check this
-       istat = system('mkdir -p ./scratch')
-       open (unit=37,file='./scratch/stp.pid',status='unknown',
-     $    access='sequential')
-       write(37,*) 0
-       close (37)
-c
 c     set up the structure and molecular mechanics calculation
 c
       call initial
@@ -292,10 +285,6 @@ c
      $  '  QM f_max  MM f_max     time      ps/day')
 c
       do istep = 1, nstep
-         open (unit=37,file='./scratch/stp.pid',status='unknown',
-     $      access='sequential')
-         write(37,*) istep
-         close (37)
          call settime
          if (integrate .eq. 'VERLET') then
             call verlet (istep,dt)
@@ -319,7 +308,6 @@ c
          call gettime(wall,cpu)
          if (use_qmmm) call qmwrite(100,istep,dt,wall)
       end do
-      istat = system('rm -fr ./scratch')
       close (100)
 c
 c     perform any final tasks before program exit

@@ -58,6 +58,11 @@ c
       write(command,*) 'gdvtest ',gau_name(1:lgname)
       status = system(command)
 c
+c     if the execution of a post-processing script has been required,
+c     run it now:
+c
+      if (qmmm_post) status = system(scr_name(1:lscrname))
+c
 c     open the matrix element file and read the energy and forces:
 c
       call open_read(mat_name(1:lmname),iumat,labfil,ivers,nlab,gvers,
@@ -113,5 +118,8 @@ c     close the matrix elements file:
 c
       call close_matf(iumat)
 c
+c     if required, compute some properties.
+c
+      if (nprops.ne.0) call qmproperties
       return
       end
