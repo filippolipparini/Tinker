@@ -434,6 +434,7 @@ OBJS =	action.o \
 	initatom.o \
 	initial.o \
 	initprm.o \
+	init_propfile.o \
 	initres.o \
 	initrot.o \
 	insert.o \
@@ -1339,6 +1340,7 @@ libtinker.a: ${OBJS}
 	initatom.o \
 	initial.o \
 	initprm.o \
+	init_propfile.o \
 	initres.o \
 	initrot.o \
 	insert.o \
@@ -1866,6 +1868,7 @@ inform.o:
 initatom.o: ptable.o
 initial.o: align.o atoms.o bath.o bound.o boxes.o cell.o fft.o files.o group.o inform.o iounit.o keys.o linmin.o minima.o molcul.o mutant.o neigh.o openmp.o output.o params.o pdb.o rigid.o scales.o sequen.o socket.o virial.o warp.o zclose.o
 initprm.o: angpot.o bndpot.o chgpot.o ctrpot.o dsppot.o fields.o kanang.o kangs.o kantor.o katoms.o kbonds.o kchrge.o kcpen.o kctrn.o kdipol.o kdsp.o khbond.o kiprop.o kitors.o kmulti.o kopbnd.o kopdst.o korbs.o kpitor.o kpolr.o krepl.o kstbnd.o ksttor.o ktorsn.o ktrtor.o kurybr.o kvdwpr.o kvdws.o math.o merck.o mplpot.o polpot.o reppot.o rxnpot.o sizes.o solute.o torpot.o units.o urypot.o vdwpot.o
+init_propfile.o: qmmm.o
 initres.o: resdue.o
 initrot.o: atoms.o couple.o group.o inform.o iounit.o math.o omega.o potent.o restrn.o rotbnd.o usage.o zcoord.o
 insert.o: atomid.o atoms.o couple.o inform.o iounit.o

@@ -271,13 +271,15 @@ c
 c
 c     integrate equations of motion to take a time step
 c
-cfl check this!
       if (use_qmmm) then
         open (unit=100,file='qminfo.log',status='unknown',
      $    access='sequential')
         write (100,1000)
         write (100,*)
         close (100)
+c
+        call init_propfile
+c
       end if
 c
  1000 format('  Step              E(SCF)             E(TD)     Dip X',

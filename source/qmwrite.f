@@ -2,8 +2,9 @@
       use qmmm
       implicit none
 c
-      integer iunit, istep
+      integer iunit, istep, lenfmt
       real*8  dt, wtstep, psday
+      character*(40) fmtu
 c
       open (unit=iunit,file='qminfo.log',status='unknown',
      $  access='append')
@@ -17,10 +18,12 @@ c
 c
 c     if there are properties available, dump them on file, too:
 c
+      write(fmtu,'(a,i4,a)') '(',lenprop,'f14.8)'
+      lenfmt = len(trim(fmtu))
       if (nprops.ne.0) then
         open (unit=100,file='qmprops.log',status='unknown',
      $    access='append')
-        write(100,*) proparray
+        write(100,fmtu(1:lenfmt)) proparray
         close (100)
       end if
       return
