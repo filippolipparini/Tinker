@@ -2046,7 +2046,7 @@ pssrigid.o: atoms.o files.o group.o inform.o iounit.o math.o minima.o molcul.o r
 pssrot.o: atoms.o files.o inform.o iounit.o math.o minima.o omega.o refer.o warp.o zcoord.o
 ptable.o:
 qmmm.o:
-qmproperties.o: qmmm.o
+qmproperties.o: atoms.o inform.o qmmm.o units.o usage.o
 qmstuf.o:
 qmwrite.o: qmmm.o
 qrfact.o:

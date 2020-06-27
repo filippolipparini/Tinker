@@ -1,5 +1,6 @@
       subroutine qmproperties
       use atoms
+      use inform
       use qmmm
       use units
       use usage
@@ -168,7 +169,7 @@ c
             end if
           end do
 c
-          write(6,100) dip_scf, dip_nuc, dip_scf+dip_nuc
+          if(debug) write(6,100) dip_scf, dip_nuc, dip_scf+dip_nuc
  100  format(' electronic scf dipole: ',3f12.6,/,
      $       ' nuclear dipole:        ',3f12.6,/,
      $       ' total scf dipole:      ',3f12.6)
@@ -196,7 +197,7 @@ c
             end if
           end do
 c
-          write(6,110) dip_tot, dip_nuc, dip_tot+dip_nuc
+          if (debug) write(6,110) dip_tot, dip_nuc, dip_tot+dip_nuc
  110  format(/,' electronic dipole:     ',3f12.6,/,
      $       ' nuclear dipole:        ',3f12.6,/,
      $       ' total dipole:          ',3f12.6,/)
@@ -216,7 +217,7 @@ c
      $          - (dot_product(sqint(:,i),p_tr(:,1,istate)) + 
      $             dot_product(sqint(:,i),p_tr(:,2,istate)))/sq2
             end do
-            write(6,120) istate, dip_tr(:,istate)
+            if (debug) write(6,120) istate, dip_tr(:,istate)
             tdip(:,istate) = dip_tr(:,istate)
           end do
  120  format(' transition dipole for state ',i3,': ',3f12.6)

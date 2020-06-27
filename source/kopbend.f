@@ -51,7 +51,6 @@ c
 c
 c     process keywords containing out-of-plane bend parameters
 c
-      write(6,*) 'in kopbend'
       blank = '                '
       zero4 = '0000'
       zero8 = '00000000'

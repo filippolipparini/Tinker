@@ -57,7 +57,6 @@ c
 c
 c     process keywords containing torsional angle parameters
 c
-      write(6,*) 'in ktors'
       blank = '                '
       zeros = '0000'
       header = .true.
@@ -1226,6 +1225,5 @@ c
 c     turn off the torsional potential if it is not used
 c
       if (ntors .eq. 0)  use_tors = .false.
-      write(6,*) 'use_tors'
       return
       end

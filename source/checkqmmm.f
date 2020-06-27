@@ -46,6 +46,8 @@ c
       if (use_qmmm .and. (use_charge.or.use_chgdpl.or.use_dipole.or.
      $  use_mpole.or.use_polar)) then
         write(6,*) 'electrostatic should not be enabled in Tinker'
+        write(6,*) use_charge, use_chgdpl, use_dipole, use_mpole,
+     $     use_polar 
         call fatal
       end if
       return
