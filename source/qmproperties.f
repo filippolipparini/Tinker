@@ -5,14 +5,13 @@
       use usage
       implicit none
 c
-      integer istate
+      integer istate,ndens,inext
       integer i,iglob,j,system,nattmp,ni,nr,ntot,lenbuf
       integer n1,n2,n3,n4,n5,nri,lcbuf,lr,lenarr,lnz,ioff,k
       integer status, istat, typea
       integer ntt, nbsq, nspin
       logical yesno,eof,haveb
       logical do_pa, do_pb, do_pta, do_ptb, do_tra, do_trb
-      logical do_dip, do_del, do_rdel
       real*8  dip_nuc(3), dip_scf(3), dip_tot(3), dip_tr(3,100)
 c
       real*8, allocatable :: p_scf(:,:), p_tr(:,:,:), p_rel(:,:)
@@ -66,16 +65,6 @@ c
       if (do_pa)  allocate (p_scf(ntt,nspin))
       if (do_pta) allocate (p_rel(ntt,nspin))
 c
-      do_dip  = .false.
-      do_del  = .false.
-      do_rdel = .false.
-c
-      do i = 1, nprops
-        if (iprop(i).eq.1) do_dip  = .true.
-        if (iprop(i).eq.2) do_del  = .true.
-        if (iprop(i).eq.3) do_rdel = .true.
-      end do
-c
       if (do_dip)  allocate (dipint(ntt,3))
       if (do_del)  allocate (dipvel(ntt,3))
       if (do_rdel) allocate (rdel(ntt,3))   
@@ -128,6 +117,27 @@ c     close the matrix elements file:
 c
       call close_matf(.false.,iumat)
 c
+c     if this is the first time that we pass here, compute a total lenght of the
+c     properties array and allocate it.
+c
+      if (lenprop.eq.0) then
+c
+c        count how many densities we are treating:
+c
+         ndens = 0
+         if (do_pa)  ndens = ndens + 1
+         if (do_pta) ndens = ndens + 1
+         if (do_tra) ndens = ndens + nstates
+c
+c        compute the number of properties:
+c
+         if (do_dip)  lenprop = lenprop + 3*ndens
+         if (do_del)  lenprop = lenprop + 3*ndens
+         if (do_rdel) lenprop = lenprop + 3*ndens
+c
+         allocate (proparray(lenprop))
+      end if
+c
 c     now, compute the required properties:
 c
       if (do_dip) then
@@ -162,6 +172,7 @@ c
  100  format(' electronic scf dipole: ',3f12.6,/,
      $       ' nuclear dipole:        ',3f12.6,/,
      $       ' total scf dipole:      ',3f12.6)
+          dip_scf = dip_scf + dip_nuc
         end if
         if (do_pta) then
           call trace_lt(.true.,nbasis,ntt,3,p_rel(:,1),dipint,dip_tot)
@@ -189,6 +200,7 @@ c
  110  format(/,' electronic dipole:     ',3f12.6,/,
      $       ' nuclear dipole:        ',3f12.6,/,
      $       ' total dipole:          ',3f12.6,/)
+          dip_tot = dip_tot + dip_nuc
         end if
         if (do_tra) then
 c
@@ -211,7 +223,32 @@ c
         end if
 c       ...
       end if
-            
+c
+c     fill the array:
+c
+      inext = 0
+      if (do_dip) then
+        if (do_pa) then
+          do i = 1, 3
+            proparray(inext+i) = dip_scf(i)
+          end do
+          inext = inext + 3
+        end if
+        if (do_pta) then
+          do i = 1, 3
+            proparray(inext+i) = dip_tot(i)
+          end do
+          inext = inext + 3
+        end if
+        if (do_tra) then
+          do istate = 1, nstates
+            do i = 1, 3
+              proparray(inext+i) = dip_tr(i,istate)
+            end do
+            inext = inext + 3
+          end do
+        end if
+      end if
       return
       end
 c

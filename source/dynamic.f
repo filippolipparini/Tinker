@@ -281,7 +281,7 @@ cfl check this!
       end if
 c
  1000 format('  Step              E(SCF)             E(TD)     Dip X',
-     $  '     Dip Y     Dip Z  Tr Dip X  Tr Dip Y  Tr Dip Z',
+     $  '     Dip Y     Dip Z  ',
      $  '  QM f_max  MM f_max     time      ps/day')
 c
       do istep = 1, nstep
@@ -308,7 +308,6 @@ c
          call gettime(wall,cpu)
          if (use_qmmm) call qmwrite(100,istep,dt,wall)
       end do
-      close (100)
 c
 c     perform any final tasks before program exit
 c

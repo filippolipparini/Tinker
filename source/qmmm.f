@@ -42,8 +42,10 @@ c
 c
 c     properties
 c
-      integer nprops, nstates, idens(100), iprop(100)
+      integer nprops, nstates, lenprop, idens(100), iprop(100)
       real*8 escf, etd
       real*8 qmdip(3), tdip(3,100), gen(1000)
       real*8 maxfor(2)
+      logical do_dip, do_del, do_rdel
+      real*8, allocatable :: proparray(:)
       end

@@ -27,8 +27,8 @@ c
       integer i,k,next,istat,nattmp,status
       real*8 rd
       logical header,havemat
-      character*20 keyword
-      character*20 value
+      character*240 keyword
+      character*240 value
       character*240 record
       character*240 string
       character*240 command
@@ -55,11 +55,11 @@ c
          call upcase (keyword)
          string = record(next:240)
          if (keyword(1:13) .eq. 'QMMM-GAUFILE ') then
-            call getword (record,value,next)
+            call gettext(record,value,next)
             lgname = len(trim(value))
             gau_name(1:lgname) = trim(value)
          else if (keyword(1:13) .eq. 'QMMM-MATFILE ') then
-            call getword (record,value,next)
+            call gettext (record,value,next)
             lmname = len(trim(value))
             mat_name(1:lmname) = trim(value)
          else if (keyword(1:10) .eq. 'QMMM-XLBO ') then
@@ -77,7 +77,6 @@ c
               call fatal
             end if
          else if (keyword(1:8) .eq. 'QMPROPS ') then
-            write(6,*) 'reading properties'
             read(string,*,err=10,end=10) (idens(k), iprop(k), 
      $        k = nprops+1,100)
   10        continue
@@ -129,6 +128,30 @@ c
           write(command,*) 'gdvtest bldmat.com'
           status = system(command)
         end if
+      end if
+c
+c     if required, allocate an array to store qm properties and compute its
+c     length
+c
+      if (nprops.ne.0) then
+c
+        do_dip  = .false.
+        do_del  = .false.
+        do_rdel = .false.
+c  
+        do i = 1, nprops
+          if (iprop(i).eq.1) do_dip  = .true.
+          if (iprop(i).eq.2) do_del  = .true.
+          if (iprop(i).eq.3) do_rdel = .true.
+        end do
+c
+c       at the moment, only dipoles can be handled
+c
+        if (do_del .or. do_rdel) then
+          write(6,*) ' only dipole-related properties are available'
+          call fatal
+        end if
+        lenprop = 0
       end if
 c
 c     open the matrix element file and read some information that will 
