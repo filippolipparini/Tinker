@@ -130,6 +130,13 @@ c
         end if
       end if
 c
+c     create an unformatted chk file for gaussian.
+c     this will store all the information that stays unaltered through the
+c     dynamics.
+c
+      write(command,*) 'unfchk -mat ',mat_name(1:lmname)
+      status = system(command)
+c
 c     if required, allocate an array to store qm properties and compute its
 c     length
 c
