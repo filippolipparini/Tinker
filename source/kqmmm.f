@@ -39,12 +39,14 @@ c     file to be present.
 c     if no file is explicitly given in input, the program assumes
 c     that the files are called gau.com and gau.mel
 c
-      gau_name = 'gau.com'
-      lgname   = 7
-      mat_name = 'gau.mat'
-      lmname   = 7
-      called   = .false.
-      nmat     = 0
+      gau_name  = 'gau.com'
+      mat_name  = 'gau.mat'
+      lgname    = 7
+      lmname    = 7
+      called    = .false.
+      nmat      = 0
+      nprops    = 0
+      qmmm_post = .false.
 c
       do i = 1, nkey
          next = 1
@@ -74,6 +76,19 @@ c
               write(6,*) 'Could not prepare XLBO .com file.'
               call fatal
             end if
+         else if (keyword(1:8) .eq. 'QMPROPS ') then
+            write(6,*) 'reading properties'
+            read(string,*,err=10,end=10) (idens(k), iprop(k), 
+     $        k = nprops+1,100)
+  10        continue
+            do while (idens(nprops+1).ne.0 .and. iprop(nprops+1).ne.0)
+              nprops = nprops + 1
+            end do
+         else if (keyword(1:12) .eq. 'POSTPROCESS ') then
+            call getword (record,value,next)
+            lscrname = len(trim(value))
+            scr_name(1:lscrname) = trim(value)
+            qmmm_post = .true.
          end if
       end do
 c

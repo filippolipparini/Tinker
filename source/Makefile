@@ -67,7 +67,7 @@ APBS_LIBS = -lapbsmainroutines -lapbs -lmaloc -lapbsblas
 ##  Parallel:  OpenMP
 
 F77 = gfortran
-F77FLAGS = -c -cpp -DUSE_NETCDF -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g
+F77FLAGS = -c -cpp -DUSE_NETCDF -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g -fcheck=all
 OPTFLAGS = -Ofast -msse3 -fopenmp -fdefault-integer-8
 #OPTFLAGS = -Og -fbacktrace -fcheck=bounds -Wunused -Wmaybe-uninitialized
 LIBDIR = -L. -L$(TINKER_LIBDIR)/linux -Wl,--no-as-needed -ldl
@@ -617,6 +617,7 @@ OBJS =	action.o \
 	qcmatrix.o \
 	qcmatrixio.o \
 	qmmm.o \
+	qmproperties.o \
 	qmstuf.o \
 	qmwrite.o \
 	qrfact.o \
@@ -1497,6 +1498,7 @@ libtinker.a: ${OBJS}
 	qcmatrix.o \
 	qcmatrixio.o \
 	qmmm.o \
+	qmproperties.o \
 	qmstuf.o \
 	qmwrite.o \
 	qrfact.o \
@@ -1768,6 +1770,8 @@ epolar1.o: atoms.o bound.o boxes.o cell.o chgpen.o chgpot.o couple.o deriv.o ene
 epolar2.o: atoms.o bound.o cell.o chgpen.o chgpot.o couple.o deriv.o hessn.o limits.o mplpot.o mpole.o polar.o polgrp.o polopt.o polpot.o poltcg.o potent.o shunt.o
 epolar3.o: action.o analyz.o atomid.o atoms.o bound.o boxes.o cell.o chgpen.o chgpot.o couple.o energi.o ewald.o inform.o inter.o iounit.o limits.o math.o molcul.o mplpot.o mpole.o neigh.o pme.o polar.o polgrp.o polpot.o potent.o shunt.o units.o
 eqmmm.o: atoms.o atomid.o deriv.o energi.o qmmm.o units.o usage.o
+eqmmm1.o: atoms.o atomid.o deriv.o energi.o qmmm.o units.o usage.o
+eqmmm3.o: atoms.o atomid.o deriv.o energi.o qmmm.o units.o usage.o
 erepel.o: atoms.o bound.o cell.o couple.o energi.o group.o inform.o inter.o limits.o mpole.o neigh.o potent.o repel.o reppot.o shunt.o usage.o
 erepel1.o: atoms.o bound.o cell.o couple.o deriv.o energi.o group.o inform.o limits.o mpole.o neigh.o potent.o repel.o reppot.o shunt.o usage.o virial.o
 erepel2.o: atoms.o bound.o cell.o couple.o deriv.o group.o hessn.o mpole.o potent.o repel.o reppot.o shunt.o usage.o
@@ -2042,6 +2046,7 @@ pssrigid.o: atoms.o files.o group.o inform.o iounit.o math.o minima.o molcul.o r
 pssrot.o: atoms.o files.o inform.o iounit.o math.o minima.o omega.o refer.o warp.o zcoord.o
 ptable.o:
 qmmm.o:
+qmproperties.o: qmmm.o
 qmstuf.o:
 qmwrite.o: qmmm.o
 qrfact.o:
