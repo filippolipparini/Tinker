@@ -64,18 +64,6 @@ c
             mat_name(1:lmname) = trim(value)
          else if (keyword(1:10) .eq. 'QMMM-XLBO ') then
             xlbo = .true.
-c
-c           create a second gaussian file with the appropriate
-c           keywords to do xlbo.
-c
-            write(command,*) 'cat ', gau_name(1:lgname),
-     $        ' | sed -e s/useoao/readoao/g > ',gau_name(1:lgname-4),
-     $        '_xlbo.com'
-            status = system(command)
-            if (status.ne.0) then
-              write(6,*) 'Could not prepare XLBO .com file.'
-              call fatal
-            end if
          else if (keyword(1:8) .eq. 'QMPROPS ') then
             read(string,*,err=10,end=10) (idens(k), iprop(k), 
      $        k = nprops+1,100)
@@ -90,6 +78,20 @@ c
             qmmm_post = .true.
          end if
       end do
+c
+c     If doing xlbo, create a second gaussian file with the appropriate
+c     keywords.
+c
+      if (xlbo) then
+        write(command,*) 'cat ', gau_name(1:lgname),
+     $    ' | sed -e s/useoao/readoao/gI > ',gau_name(1:lgname-4),
+     $    '_xlbo.com'
+        status = system(command)
+        if (status.ne.0) then
+          write(6,*) 'Could not prepare XLBO .com file.'
+          call fatal
+        end if
+      end if
 c
 c     allocate memory for qmmm:
 c
