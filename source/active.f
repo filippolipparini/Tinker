@@ -45,7 +45,7 @@ c
       if (allocated(qmatoms))  deallocate (qmatoms)
       allocate (qmatoms(n))
       if (allocated(qmlist))  deallocate (qmlist)
-      allocate (qmlist(n))
+      allocate (qmlist(n+1))
       if (allocated(pbond))  deallocate (pbond)
       allocate (pbond(n))
       if (allocated(use_pbond))  deallocate (use_pbond)
