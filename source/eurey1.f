@@ -59,6 +59,7 @@ c     calculate the Urey-Bradley 1-3 energy and first derivatives
 c
       do i = 1, nurey
          ia = iury(1,i)
+         ib = iury(2,i)
          ic = iury(3,i)
 c
 c        skip if there are more than a qm atom

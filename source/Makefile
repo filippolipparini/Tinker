@@ -67,11 +67,11 @@ APBS_LIBS = -lapbsmainroutines -lapbs -lmaloc -lapbsblas
 ##  Parallel:  OpenMP
 
 F77 = gfortran
-F77FLAGS = -c -cpp -DUSE_NETCDF -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g -fcheck=all
+F77FLAGS = -c -cpp -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g -fcheck=all
 OPTFLAGS = -Ofast -msse3 -fopenmp -fdefault-integer-8
 #OPTFLAGS = -Og -fbacktrace -fcheck=bounds -Wunused -Wmaybe-uninitialized
 LIBDIR = -L. -L$(TINKER_LIBDIR)/linux -Wl,--no-as-needed -ldl
-LIBS = -lnetcdff
+LIBS = #-lnetcdff
 LIBFLAGS = -crusv
 RANLIB = ranlib
 LINKFLAGS = $(OPTFLAGS) -static-libgcc
