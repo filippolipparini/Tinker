@@ -43,6 +43,7 @@ c
 c     properties
 c
       integer nprops, nstates, lenprop, idens(100), iprop(100)
+      integer itscf
       real*8 escf, etd
       real*8 qmdip(3), tdip(3,100), gen(1000)
       real*8 maxfor(2)

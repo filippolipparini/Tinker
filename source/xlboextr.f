@@ -20,6 +20,14 @@ c
         imat(i) = mod(nmat-i+1,8) 
         if (imat(i).eq.0) imat(i) = 8
       end do
+c     write(6,*) 'nmat, imat(1):',   nmat,   imat(1)
+c     write(6,*) 'nmat-1, imat(2):', nmat-1, imat(2)
+c     write(6,*) 'nmat-2, imat(3):', nmat-2, imat(3)
+c     write(6,*) 'nmat-3, imat(4):', nmat-3, imat(4)
+c     write(6,*) 'nmat-4, imat(5):', nmat-4, imat(5)
+c     write(6,*) 'nmat-5, imat(6):', nmat-5, imat(6)
+c     write(6,*) 'nmat-6, imat(7):', nmat-6, imat(7)
+c     write(6,*) 'nmat-7, imat(8):', nmat-7, imat(8)
 c
 c     guess = two*pguess(8) - pguess(7) + kappa*(pconv - pguess(8)) +
 c           + alpha*sum(i=1,8) c(i)*pguess(i)
@@ -35,6 +43,6 @@ c     write(6,'(7f12.6)') (guess(k*(k+1)/2),k=1,7)
 c
 c     update the pguess array by overwriting the oldest density:
 c
-      pguess(:,imat(1)) = guess
+      pguess(:,imat(8)) = guess
       return
       end

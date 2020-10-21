@@ -137,6 +137,7 @@ c
           else
              eqmmm = escf
           endif
+          itscf = int(gen(63))
         else if(cbuf(1:lcbuf).eq.'NUCLEAR GRADIENT') then
           call rd_rbuf(iumat,nr*ntot,nr*lenbuf,temp)
           maxfor(1) = 0.0d0

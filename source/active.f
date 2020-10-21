@@ -119,6 +119,7 @@ c
    25       continue
             do while (qmlist(nqmatoms+1) .ne. 0)
                nqmatoms = nqmatoms + 1
+               if (nqmatoms.eq.n) exit
             end do
          else if (keyword(1:8) .eq. 'PBATOMS ') then                 
             write(iout,*) ' pseudo-bonds not supported'
