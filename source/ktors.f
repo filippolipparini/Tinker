@@ -287,7 +287,6 @@ c
          if (qmatoms(ib)) nqm = nqm + 1
          if (qmatoms(ic)) nqm = nqm + 1
          if (qmatoms(id)) nqm = nqm + 1
-         write(6,*) 'i, nqm:', i, nqm
          if (nqm.ge.3) cycle
          done = .false.
 c
@@ -554,7 +553,6 @@ c
 c     turn off the torsional potential if it is not used
 c
       if (ntors .eq. 0)  use_tors = .false.
-      write(6,*) 'use_tors', use_tors
       return
       end
 c

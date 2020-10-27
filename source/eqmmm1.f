@@ -63,7 +63,7 @@ c
 c
       if (xlbo .and. nmat.ge.8) then
         call wr_lrbuf(iumat,'ALPHA OAO DENSITY MATRIX',1,lenbuf,-nbasis,
-     $    nbasis,0,0,0,.false.,guess)
+     $    nbasis,0,0,0,0,guess)
       end if
       call close_matf(.true.,iumat)
 c

@@ -46,9 +46,10 @@ TINKER_LIBDIR = $(TINKERDIR)/lib
 BINDIR = $(TINKERDIR)/bin
 LINKDIR = /usr/local/bin
 
-FFTWDIR = $(TINKERDIR)/fftw
-FFTW_LIBDIR = -L$(FFTWDIR)/lib
-FFTW_LIBS = -lfftw3_threads -lfftw3
+FFTWDIR = -L/opt/fftw
+FFTW_LIBDIR = $(FFTWDIR)/lib
+FFTW_LIBS = /opt/fftw/lib/libfftw3.a /opt/fftw/lib/libfftw3_threads.a
+#FFTW_LIBS = -lfftw3 -lfftw3_threads
 
 APBSDIR = $(TINKERDIR)/apbs
 APBS_INCDIR = -I$(APBSDIR)/include
@@ -67,9 +68,9 @@ APBS_LIBS = -lapbsmainroutines -lapbs -lmaloc -lapbsblas
 ##  Parallel:  OpenMP
 
 F77 = gfortran
-F77FLAGS = -c -cpp -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g -fcheck=all
+F77FLAGS = -c -cpp -I/usr/include -L/usr/lib64 -DUSE_I8 
 OPTFLAGS = -Ofast -msse3 -fopenmp -fdefault-integer-8
-#OPTFLAGS = -Og -fbacktrace -fcheck=bounds -Wunused -Wmaybe-uninitialized
+#OPTFLAGS = -Og -fbacktrace -fcheck=bounds -Wunused -Wmaybe-uninitialized -fcheck=all -fopenmp
 LIBDIR = -L. -L$(TINKER_LIBDIR)/linux -Wl,--no-as-needed -ldl
 LIBS = #-lnetcdff
 LIBFLAGS = -crusv
