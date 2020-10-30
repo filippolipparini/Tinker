@@ -57,6 +57,10 @@ c     launch the qm/mm calculation by gaussian
 c
       write(command,*) 'gdvtest ',gau_name(1:lgname)
       status = system(command)
+      if (status.ne.0) then
+        write(6,*) 'Error returned in Gaussian calculation'
+        call fatal
+      end if
 c
 c     if the execution of a post-processing script has been required,
 c     run it now:

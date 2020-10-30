@@ -389,6 +389,7 @@ c
                   elf0 = elf
                   eg0 = eg
                   ex0 = ex
+                  eqmmm0 = eqmmm
                   if (j .eq. 1) then
                      x(i) = x(i) + eps
                   else if (j .eq. 2) then
