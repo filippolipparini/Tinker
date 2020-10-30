@@ -1,8 +1,11 @@
       subroutine xlboextr
       use qmmm
       implicit none
-      integer i, imat(8), k
+      integer i, imat(8), k, iter, j, ij
       real*8 kappa, coeff(8), alpha, two
+      real*8 :: err_rms, err_max, thres, thres1
+      real*8, allocatable :: p2(:,:), p3(:,:), pscr(:,:), perr(:,:)
+      logical conv
       save kappa, coeff, alpha, two
       data kappa/1.86d0/, alpha/0.0016d0/, (coeff(i), i = 1, 8)    
      $  /-36.0d0,99.0d0,-88.0d0,11.0d0,32.0d0,-25.0d0,8.0d0,-1.0d0/,
@@ -37,6 +40,46 @@ c
       do i = 1, 8
         guess = guess + alpha*coeff(i)*pguess(:,imat(i))
       end do
+c
+      allocate (p2(nbasis,nbasis),p3(nbasis,nbasis),pscr(nbasis,nbasis))
+      allocate (perr(nbasis,nbasis))
+c
+      conv = .false.
+      do iter = 1, 11
+        p2 = matmul(pscr,pscr)
+c       write(6,*) 'p^2'
+c       write(6,'(12f8.4)') p2
+        perr = abs(p2 - pscr)
+        err_rms = 0.0d0
+        err_max = 0.0d0
+        do i = 1, nbasis
+          do j = 1, nbasis
+            err_max = max(err_max,perr(i,j))
+            err_rms = err_rms + perr(i,j)**2
+          end do
+        end do
+        err_rms = sqrt(err_rms/float(nbasis))
+!       write(6,1000) iter-1, err_max, err_rms
+        if (err_rms.lt.thres .and. err_max.lt.thres1) then
+          conv = .true.
+        end if
+        p3 = matmul(p2,pscr)
+        pscr = 3.0d0*p2 - 2.0d0*p3
+        if(conv) goto 999
+      end do
+ 999  continue
+ 1000 format(t3,'it = ', i3, ' error (rms,max): ', 2d9.2)
+      if (conv) then
+        pscr = 2.0d0*pscr
+        ij = 0
+        do i = 1, nbasis
+          do j = 1, i
+            ij = ij + 1
+            guess(ij) = pscr(i,j)
+          end do
+        end do
+      end if
+      deallocate (p2,p3,pscr,perr)
 c
 c     write(6,*) 'guess density:'
 c     write(6,'(7f12.6)') (guess(k*(k+1)/2),k=1,7)
