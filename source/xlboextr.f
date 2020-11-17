@@ -44,6 +44,19 @@ c
       allocate (p2(nbasis,nbasis),p3(nbasis,nbasis),pscr(nbasis,nbasis))
       allocate (perr(nbasis,nbasis))
 c
+      thres  = 1.0d-8
+      thres1 = 1.0d-7
+c     write(6,*) 'nbasis=', nbasis
+      ij = 0
+      do i = 1, nbasis
+        do j = 1, i
+          ij = ij + 1
+          pscr(i,j) = guess(ij)
+          pscr(j,i) = guess(ij)
+        end do
+      end do
+      pscr = 0.50d0*pscr
+c
       conv = .false.
       do iter = 1, 11
         p2 = matmul(pscr,pscr)
@@ -59,7 +72,7 @@ c       write(6,'(12f8.4)') p2
           end do
         end do
         err_rms = sqrt(err_rms/float(nbasis))
-!       write(6,1000) iter-1, err_max, err_rms
+c       write(6,1000) iter-1, err_max, err_rms
         if (err_rms.lt.thres .and. err_max.lt.thres1) then
           conv = .true.
         end if
