@@ -41,7 +41,7 @@
 ##  APBS_LIB_DIR    Directory with APBS Libraries
 ##  APBS_LIBS       APBS Libraries needed to build Tinker
 
-TINKERDIR = $(HOME)/molecolab/Tinker
+TINKERDIR = $(HOME)/codes/Tinker
 TINKER_LIBDIR = $(TINKERDIR)/lib
 BINDIR = $(TINKERDIR)/bin
 LINKDIR = /usr/local/bin
@@ -67,15 +67,20 @@ APBS_LIBS = -lapbsmainroutines -lapbs -lmaloc -lapbsblas
 ##  Parallel:  OpenMP
 
 F77 = gfortran
-F77FLAGS = -c -cpp -DUSE_NETCDF -I/usr/include -L/usr/lib64 -DUSE_I8 -fbacktrace -g -fcheck=all
+F77FLAGS = -c -cpp -I/usr/include -L/usr/lib64 -DUSE_I8
 OPTFLAGS = -Ofast -msse3 -fopenmp -fdefault-integer-8
+LIBS = 
 #OPTFLAGS = -Og -fbacktrace -fcheck=bounds -Wunused -Wmaybe-uninitialized
 LIBDIR = -L. -L$(TINKER_LIBDIR)/linux -Wl,--no-as-needed -ldl
-LIBS = -lnetcdff
 LIBFLAGS = -crusv
 RANLIB = ranlib
 LINKFLAGS = $(OPTFLAGS) -static-libgcc
 RENAME = rename_bin
+####################################################################
+##  Uncomment the following lines to add support for NETCDF I/O:  ##
+####################################################################
+#F77FLAGS = $(F77FLAGS) -DUSE_NETCDF
+#LIBS = -lnetcdff
 
 ##  Build:     TINKER
 ##  OS Type:   Apple MacOS
@@ -807,8 +812,8 @@ EXEFILES = alchemy.x \
 	${F77} ${LINKFLAGS} -o $@ ${LIBDIR} ${FFTW_LIBDIR} $^ ${FFTW_LIBS} ${LIBS} #; strip $@
 	mv $@ ../bin/${@:r}
 
-#all: ${EXEFILES}
-all: analyze.x dynamic.x minimize.x testgrad.x
+all: ${EXEFILES}
+#all: analyze.x dynamic.x minimize.x testgrad.x
 
 install: ${RENAME}
 
