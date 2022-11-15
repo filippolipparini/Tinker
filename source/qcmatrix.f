@@ -82,6 +82,7 @@ C
       NTot = LenArr(-N,-N,-N,N,1)
       LenBX = LenBuf/(NR+2)
       NNZ = QCM_NumNZR(NR,NTot,RInt)
+c     Call Wr_Labl(IU,Label,4,NR,NNZ,LenBX,-N,-N,-N,N,1,.False.)
       Call Wr_Labl(IU,Label,4,NR,NNZ,LenBX,-N,-N,-N,N,1,0)
       Call Wr_2E(IU,NNZ,NR,N,NTot,LenBX,RInt)
       Return

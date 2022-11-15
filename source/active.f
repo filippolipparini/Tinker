@@ -45,7 +45,7 @@ c
       if (allocated(qmatoms))  deallocate (qmatoms)
       allocate (qmatoms(n))
       if (allocated(qmlist))  deallocate (qmlist)
-      allocate (qmlist(n))
+      allocate (qmlist(n+1))
       if (allocated(pbond))  deallocate (pbond)
       allocate (pbond(n))
       if (allocated(use_pbond))  deallocate (use_pbond)
@@ -119,6 +119,7 @@ c
    25       continue
             do while (qmlist(nqmatoms+1) .ne. 0)
                nqmatoms = nqmatoms + 1
+               if (nqmatoms.eq.n) exit
             end do
          else if (keyword(1:8) .eq. 'PBATOMS ') then                 
             write(iout,*) ' pseudo-bonds not supported'

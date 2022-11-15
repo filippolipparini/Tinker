@@ -8,9 +8,9 @@ c
 c
       open (unit=iunit,file='qminfo.log',status='unknown',
      $  access='append')
- 1000 format(i6,2x,2f18.4,3f10.4,2d10.2,f9.2,f12.4)
+ 1000 format(i6,2x,f18.4,i5,f18.4,3f10.4,2d10.2,f9.2,f12.4)
       psday = 86400.0d0*dt/(wtstep)
-      write(iunit,1000) istep,escf,etd,qmdip(1),qmdip(2),qmdip(3),
+      write(iunit,1000) istep,escf,itscf,etd,qmdip(1),qmdip(2),qmdip(3),
      $  maxfor(1),maxfor(2),wtstep,psday
 c
       if (mod(istep,100).eq.0) write(iunit,*)

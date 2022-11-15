@@ -282,8 +282,8 @@ c
 c
       end if
 c
- 1000 format('  Step              E(SCF)             E(TD)     Dip X',
-     $  '     Dip Y     Dip Z  ',
+ 1000 format('  Step              E(SCF) # IT             E(TD)     ',
+     $  'Dip X     Dip Y     Dip Z  ',
      $  '  QM f_max  MM f_max     time      ps/day')
 c
       do istep = 1, nstep

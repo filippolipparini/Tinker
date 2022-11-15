@@ -46,9 +46,10 @@ TINKER_LIBDIR = $(TINKERDIR)/lib
 BINDIR = $(TINKERDIR)/bin
 LINKDIR = /usr/local/bin
 
-FFTWDIR = $(TINKERDIR)/fftw
-FFTW_LIBDIR = -L$(FFTWDIR)/lib
-FFTW_LIBS = -lfftw3_threads -lfftw3
+FFTWDIR = -L/opt/fftw
+FFTW_LIBDIR = $(FFTWDIR)/lib
+FFTW_LIBS = /opt/fftw/lib/libfftw3.a /opt/fftw/lib/libfftw3_threads.a
+#FFTW_LIBS = -lfftw3 -lfftw3_threads
 
 APBSDIR = $(TINKERDIR)/apbs
 APBS_INCDIR = -I$(APBSDIR)/include

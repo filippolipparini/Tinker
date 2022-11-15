@@ -72,7 +72,7 @@ c
               nprops = nprops + 1
             end do
          else if (keyword(1:12) .eq. 'POSTPROCESS ') then
-            call getword (record,value,next)
+            call gettext (record,value,next)
             lscrname = len(trim(value))
             scr_name(1:lscrname) = trim(value)
             qmmm_post = .true.

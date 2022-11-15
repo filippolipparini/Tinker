@@ -63,7 +63,7 @@ c
 c
       if (xlbo .and. nmat.ge.8) then
         call wr_lrbuf(iumat,'ALPHA OAO DENSITY MATRIX',1,lenbuf,-nbasis,
-     $    nbasis,0,0,0,.false.,guess)
+     $    nbasis,0,0,0,0,guess)
       end if
       call close_matf(.true.,iumat)
 c
@@ -137,6 +137,7 @@ c
           else
              eqmmm = escf
           endif
+          itscf = int(gen(63))
         else if(cbuf(1:lcbuf).eq.'NUCLEAR GRADIENT') then
           call rd_rbuf(iumat,nr*ntot,nr*lenbuf,temp)
           maxfor(1) = 0.0d0
